@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'health_app',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -66,6 +68,14 @@ TEMPLATES = [
         },
     },
 ]
+
+# Настройки Rest Framework
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly'
+    ]
+}
+
 
 WSGI_APPLICATION = 'HealthyLifeStyle.wsgi.application'
 
