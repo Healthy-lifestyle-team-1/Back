@@ -10,7 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import os
 from pathlib import Path
+from dotenv import load_dotenv, find_dotenv
+
+load_dotenv(find_dotenv("../.env"))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,8 +41,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'health_app',
     'rest_framework',
+
+    'allauth',
+    'allauth.account',
+
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.vk',
 ]
 
 MIDDLEWARE = [
@@ -49,6 +61,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # Add the account middleware:
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = 'HealthyLifeStyle.urls'
@@ -64,10 +79,35 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # `allauth` needs this from django
+                'django.template.context_processors.request',
             ],
         },
     },
 ]
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to log in by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # `allauth` specific authentication methods, such as login by email
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+# Provider specific settings
+SOCIALACCOUNT_PROVIDERS = {
+    # Для каждого провайдера надо вписать реквизиты для входа
+    # Пример:
+    #'google': {
+    #     For each OAuth based provider, either add a ``SocialApp``
+    #     (``socialaccount`` app) containing the required client
+    #     credentials, or list them here:
+    #    'APP': {
+    #        'client_id': '123',
+    #        'secret': '456',
+    #        'key': ''
+    #    }
+    #}
+}
 
 # Настройки Rest Framework
 REST_FRAMEWORK = {
@@ -76,6 +116,13 @@ REST_FRAMEWORK = {
     ]
 }
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 2525
+EMAIL_HOST_USER = f"{os.getenv('ACCOUNT_NAME')}"
+EMAIL_HOST_PASSWORD = f"{os.getenv('ACCOUNT_PASSWORD')}"
+DEFAULT_FROM_EMAIL = f"{os.getenv('ACCOUNT_NAME')}@mail.ru"
 
 WSGI_APPLICATION = 'HealthyLifeStyle.wsgi.application'
 
