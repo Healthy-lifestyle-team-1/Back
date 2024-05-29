@@ -31,4 +31,10 @@ class DishHalfSerializer(serializers.ModelSerializer):
 class CombinationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Combination
+        fields = ['half1', 'half2']
+
+
+class AllergySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Allergy
         fields = ['name', 'dish_halves']

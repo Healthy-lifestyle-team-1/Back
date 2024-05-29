@@ -9,13 +9,13 @@ class Customer(models.Model):
         ('F', 'Female'),
     ]
 
-    ACTIVITY_LEVEL_CHOICES = [
-        (1.2, 'Минимальная активность, сидячая работа'),
-        (1.375, 'Слабый уровень активности'),
-        (1.55, 'Умеренный уровень активности'),
-        (1.7, 'Тяжелая или трудоемкая активность'),
-        (1.9, 'Экстремальный уровень активности'),
-    ]
+    #ACTIVITY_LEVEL_CHOICES = [
+    #    (1.2, 'Минимальная активность, сидячая работа'),
+    #    (1.375, 'Слабый уровень активности'),
+    #    (1.55, 'Умеренный уровень активности'),
+    #    (1.7, 'Тяжелая или трудоемкая активность'),
+    #    (1.9, 'Экстремальный уровень активности'),
+    #]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)  # Связь один-к-одному с моделью User
     name = models.CharField(max_length=10, verbose_name='Имя')
@@ -27,7 +27,7 @@ class Customer(models.Model):
     height = models.FloatField(max_length=3, verbose_name='Рост')
     age = models.IntegerField(verbose_name='Возраст')
     allergies = models.TextField(blank=True, null=True, verbose_name='Список аллергенов')
-    activity_level = models.FloatField(choices=ACTIVITY_LEVEL_CHOICES, default=1.2, verbose_name='Уровень активности')
+    #activity_level = models.FloatField(choices=ACTIVITY_LEVEL_CHOICES, default=1.2, verbose_name='Уровень активности')
 
     # Алгоритм расчёта КБЖУ по методу Миффлина-Сан Жеора
     def calculate_kbju(self):
@@ -58,8 +58,8 @@ class Category(models.Model):
 
 # Половинки тарелок
 class DishHalf(models.Model):
-    name = models.CharField(max_length=255)
-    category = models.ForeignKey(Category, related_name='dish_halves', on_delete=models.CASCADE)
+    name = models.CharField(max_length=255, unique=True)
+    category = models.ForeignKey(Category, related_name='dish_halves', on_delete=models.CASCADE, null=True, blank=True)
     calories = models.FloatField(max_length=10, verbose_name='Калории')
     proteins = models.FloatField(max_length=10, verbose_name='Протеины')
     fats = models.FloatField(max_length=10, verbose_name='Жиры')
@@ -72,11 +72,21 @@ class DishHalf(models.Model):
 
 # Комбинации
 class Combination(models.Model):
+    half1 = models.ForeignKey(DishHalf, related_name='half1', on_delete=models.CASCADE, null=True)
+    half2 = models.ForeignKey(DishHalf, related_name='half2', on_delete=models.CASCADE, null=True)
+
+    class Meta:
+        unique_together = ('half1', 'half2')
+
+    def __str__(self):
+        return self.half1.name + '-' + self.half2.name
+
+
+# Аллергия
+class Allergy(models.Model):
     name = models.CharField(max_length=255)
     dish_halves = models.ManyToManyField(DishHalf)
 
-    def __str__(self):
-        return self.name
 
 
 # =============== На доработке ===============
