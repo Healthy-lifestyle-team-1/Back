@@ -25,7 +25,7 @@ class Customer(models.Model):
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, verbose_name='Пол')
     weight = models.FloatField(max_length=3, verbose_name='Вес')
     height = models.FloatField(max_length=3, verbose_name='Рост')
-    age = models.IntegerField(max_length=3, verbose_name='Возраст')
+    age = models.IntegerField(verbose_name='Возраст')
     allergies = models.TextField(blank=True, null=True, verbose_name='Список аллергенов')
     activity_level = models.FloatField(choices=ACTIVITY_LEVEL_CHOICES, default=1.2, verbose_name='Уровень активности')
 
