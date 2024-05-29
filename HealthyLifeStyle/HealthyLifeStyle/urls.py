@@ -17,8 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
+from health_app import views
 
 router = routers.DefaultRouter()
+router.register(r'customer', views.CustomerViewSet)
+router.register(r'category', views.CategoryViewSet)
+router.register(r'dishhalf', views.DishHalfViewSet)
+router.register(r'combination', views.CombinationViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

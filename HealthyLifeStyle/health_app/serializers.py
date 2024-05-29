@@ -2,12 +2,12 @@ from rest_framework import serializers
 from .models import *
 
 
-# Сериализатор для модели Client
-class ClientSerializer(serializers.ModelSerializer):
+# Сериализаторы для моделей
+class CustomerSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Customer
-        fields = '__all__'
+        exclude = ['user']
     
     # Метод для создания нового объекта
     def create(self, validated_data):
@@ -15,3 +15,20 @@ class ClientSerializer(serializers.ModelSerializer):
         return client
 
 
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['name']
+
+
+class DishHalfSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DishHalf
+        fields = ['name', 'category', 'calories',
+                  'proteins', 'fats', 'carbs', 'price']
+
+
+class CombinationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Combination
+        fields = ['name', 'dish_halves']
