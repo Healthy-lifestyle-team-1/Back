@@ -7,7 +7,7 @@ class CustomerSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Customer
-        exclude = ['user']
+        fields = '__all__'
     
     # Метод для создания нового объекта
     def create(self, validated_data):
@@ -37,4 +37,4 @@ class CombinationSerializer(serializers.ModelSerializer):
 class AllergySerializer(serializers.ModelSerializer):
     class Meta:
         model = Allergy
-        fields = ['name', 'dish_halves']
+        fields = ['name']
