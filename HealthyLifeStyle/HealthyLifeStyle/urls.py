@@ -20,7 +20,6 @@ from rest_framework import routers
 from health_app import views
 
 router = routers.DefaultRouter()
-router.register(r'customer', views.CustomerViewSet)
 router.register(r'category', views.CategoryViewSet)
 router.register(r'dishhalf', views.DishHalfViewSet)
 router.register(r'combination', views.CombinationViewSet)
@@ -29,4 +28,5 @@ router.register(r'allergy', views.AllergyViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
+    path('', include('user_app.urls')),
 ]

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # подключаем доп приложения
     'health_app',
+    'user_app',
     'rest_framework',
     'corsheaders',
     'django_filters',
@@ -62,6 +63,9 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 ]
+
+## User model
+AUTH_USER_MODEL = 'user_app.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [

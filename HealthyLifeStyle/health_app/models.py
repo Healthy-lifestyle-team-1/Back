@@ -58,54 +58,6 @@ class Combination(models.Model):
         return f'{self.half1} - {self.half2.name}'
 
 
-# Данные пользователя
-class Customer(models.Model):
-    GENDER_CHOICES = [
-        ('M', 'Male'),
-        ('F', 'Female'),
-    ]
-
-    name = models.CharField(max_length=10, verbose_name='Имя')
-    fam = models.CharField(max_length=20, verbose_name='Фамилия')
-    phone = models.TextField(max_length=15, null=True, verbose_name='Телефон')
-    allergies = models.ManyToManyField(Allergy, blank=True, verbose_name='Список аллергенов')
-
-    def __str__(self):
-        return f'{self.name} {self.fam}'
-
-
-    # ACTIVITY_LEVEL_CHOICES = [
-    #    (1.2, 'Минимальная активность, сидячая работа'),
-    #    (1.375, 'Слабый уровень активности'),
-    #    (1.55, 'Умеренный уровень активности'),
-    #    (1.7, 'Тяжелая или трудоемкая активность'),
-    #    (1.9, 'Экстремальный уровень активности'),
-    # ]
-    # user = models.OneToOneField(User, on_delete=models.CASCADE)  # Связь один-к-одному с моделью User
-    # email = models.EmailField()
-    # gender = models.CharField(max_length=1, choices=GENDER_CHOICES, verbose_name='Пол')
-    # weight = models.FloatField(max_length=3, verbose_name='Вес')
-    # height = models.FloatField(max_length=3, verbose_name='Рост')
-    # age = models.IntegerField(verbose_name='Возраст')
-    # activity_level = models.FloatField(choices=ACTIVITY_LEVEL_CHOICES, default=1.2, verbose_name='Уровень активности')
-
-    # Алгоритм расчёта КБЖУ по методу Миффлина-Сан Жеора
-    # def calculate_kbju(self):
-    #    if self.gender == 'M':
-    #        bmr = (10 * self.weight + 6.25 * self.height - 5 * self.age + 5) * self.activity_level
-    #    elif self.gender == 'F':
-    #        bmr = (10 * self.weight + 6.25 * self.height - 5 * self.age - 161) * self.activity_level
-    #    # Примерные пропорции для расчета КБЖУ
-    #    proteins = bmr * 0.3 / 4
-    #    fats = bmr * 0.25 / 9
-    #    carbs = bmr * 0.45 / 4
-    #    return {
-    #        'calories': bmr,
-    #        'proteins': proteins,
-    #        'fats': fats,
-    #        'carbs': carbs
-    #    }
-
 # TODO Добавить отзыва
 
 

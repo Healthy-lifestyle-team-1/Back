@@ -3,18 +3,6 @@ from .models import *
 
 
 # Сериализаторы для моделей
-class CustomerSerializer(serializers.ModelSerializer):
-    
-    class Meta:
-        model = Customer
-        fields = '__all__'
-    
-    # Метод для создания нового объекта
-    def create(self, validated_data):
-        client = Customer.objects.create(**validated_data)
-        return client
-
-
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
