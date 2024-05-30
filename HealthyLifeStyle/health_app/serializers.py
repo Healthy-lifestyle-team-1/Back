@@ -24,8 +24,8 @@ class CategorySerializer(serializers.ModelSerializer):
 class DishHalfSerializer(serializers.ModelSerializer):
     class Meta:
         model = DishHalf
-        fields = ['name', 'category', 'calories',
-                  'proteins', 'fats', 'carbs', 'price']
+        fields = ['name', 'category', 'image', 'calories',
+                  'proteins', 'fats', 'carbs', 'price', 'rating']
 
 
 class CombinationSerializer(serializers.ModelSerializer):

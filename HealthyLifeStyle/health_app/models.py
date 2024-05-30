@@ -30,12 +30,15 @@ class Allergy(models.Model):
 class DishHalf(models.Model):
     name = models.CharField(max_length=255, unique=True, verbose_name='Название')
     category = models.ForeignKey(Category, related_name='dish_halves', on_delete=models.CASCADE, null=True, blank=True, verbose_name='Категория')
+    image = models.ImageField(upload_to='images/', blank=True, null=True)
+    # TODO Уточнить работу API с фото
     calories = models.FloatField(max_length=10, verbose_name='Калории')
     proteins = models.FloatField(max_length=10, verbose_name='Протеины')
     fats = models.FloatField(max_length=10, verbose_name='Жиры')
     carbs = models.FloatField(max_length=10, verbose_name='Углеводы')
     price = models.DecimalField(max_digits=6, decimal_places=2, verbose_name='Цена')
     contraindications = models.ManyToManyField(Allergy, blank=True, verbose_name='Противопоказания')
+    rating = models.DecimalField(max_digits=3, decimal_places=2, null=True) # 4.11
 
     def __str__(self):
         return self.name
@@ -43,8 +46,10 @@ class DishHalf(models.Model):
 
 # Комбинации
 class Combination(models.Model):
-    half1 = models.ForeignKey(DishHalf, related_name='half1', on_delete=models.CASCADE, null=True, verbose_name='Первая половина')
-    half2 = models.ForeignKey(DishHalf, related_name='half2', on_delete=models.CASCADE, null=True, verbose_name='Вторая половина')
+    half1 = models.ForeignKey(DishHalf, related_name='half1', on_delete=models.CASCADE,
+                              null=True, verbose_name='Первая половина')
+    half2 = models.ForeignKey(DishHalf, related_name='half2', on_delete=models.CASCADE,
+                              null=True, verbose_name='Вторая половина')
 
     class Meta:
         unique_together = ('half1', 'half2')
@@ -60,28 +65,32 @@ class Customer(models.Model):
         ('F', 'Female'),
     ]
 
-    #ACTIVITY_LEVEL_CHOICES = [
+    name = models.CharField(max_length=10, verbose_name='Имя')
+    fam = models.CharField(max_length=20, verbose_name='Фамилия')
+    phone = models.TextField(max_length=15, null=True, verbose_name='Телефон')
+    allergies = models.ManyToManyField(Allergy, blank=True, verbose_name='Список аллергенов')
+
+    def __str__(self):
+        return f'{self.name} {self.fam}'
+
+
+    # ACTIVITY_LEVEL_CHOICES = [
     #    (1.2, 'Минимальная активность, сидячая работа'),
     #    (1.375, 'Слабый уровень активности'),
     #    (1.55, 'Умеренный уровень активности'),
     #    (1.7, 'Тяжелая или трудоемкая активность'),
     #    (1.9, 'Экстремальный уровень активности'),
-    #]
-
-    #user = models.OneToOneField(User, on_delete=models.CASCADE)  # Связь один-к-одному с моделью User
-    name = models.CharField(max_length=10, verbose_name='Имя')
-    fam = models.CharField(max_length=20, verbose_name='Фамилия')
-    phone = models.TextField(max_length=15, null=True, verbose_name='Телефон')
-    email = models.EmailField()
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, verbose_name='Пол')
-    weight = models.FloatField(max_length=3, verbose_name='Вес')
-    height = models.FloatField(max_length=3, verbose_name='Рост')
-    age = models.IntegerField(verbose_name='Возраст')
-    allergies = models.ManyToManyField(Allergy, blank=True, verbose_name='Список аллергенов')
-    #activity_level = models.FloatField(choices=ACTIVITY_LEVEL_CHOICES, default=1.2, verbose_name='Уровень активности')
+    # ]
+    # user = models.OneToOneField(User, on_delete=models.CASCADE)  # Связь один-к-одному с моделью User
+    # email = models.EmailField()
+    # gender = models.CharField(max_length=1, choices=GENDER_CHOICES, verbose_name='Пол')
+    # weight = models.FloatField(max_length=3, verbose_name='Вес')
+    # height = models.FloatField(max_length=3, verbose_name='Рост')
+    # age = models.IntegerField(verbose_name='Возраст')
+    # activity_level = models.FloatField(choices=ACTIVITY_LEVEL_CHOICES, default=1.2, verbose_name='Уровень активности')
 
     # Алгоритм расчёта КБЖУ по методу Миффлина-Сан Жеора
-    #def calculate_kbju(self):
+    # def calculate_kbju(self):
     #    if self.gender == 'M':
     #        bmr = (10 * self.weight + 6.25 * self.height - 5 * self.age + 5) * self.activity_level
     #    elif self.gender == 'F':
@@ -97,8 +106,7 @@ class Customer(models.Model):
     #        'carbs': carbs
     #    }
 
-    def __str__(self):
-        return f'{self.name} {self.fam}'
+# TODO Добавить отзыва
 
 
 # =============== На доработке ===============
