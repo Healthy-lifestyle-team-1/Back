@@ -19,15 +19,20 @@ from django.urls import path, include
 from rest_framework import routers
 from health_app import views
 
-router = routers.DefaultRouter()
-router.register(r'category', views.CategoryViewSet)
-router.register(r'dishhalf', views.DishHalfViewSet)
-router.register(r'combination', views.CombinationViewSet)
-router.register(r'allergy', views.AllergyViewSet)
-router.register(r'article', views.ArticleViewSet)
+# router = routers.DefaultRouter()
+# router.register(r'category', views.CategoryViewSet)
+# router.register(r'dishhalf', views.DishHalfViewSet)
+# router.register(r'combination', views.CombinationViewSet)
+# router.register(r'allergy', views.AllergyViewSet)
+# router.register(r'article', views.ArticleViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(router.urls)),
+    # path('', include(router.urls)),
+    path('category/', views.CategoryViewSet.as_view()),
+    path('dishhalf/', views.DishHalfViewSet.as_view()),
+    path('combination/', views.CombinationViewSet.as_view()),
+    path('allergy/', views.AllergyViewSet.as_view()),
+    path('article/', views.ArticleViewSet.as_view()),
     path('', include('user_app.urls')),
 ]

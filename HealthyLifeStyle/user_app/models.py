@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
-from django.contrib.auth.models import PermissionsMixin
+from django.contrib.auth.models import PermissionsMixin, AbstractUser
 from django.utils import timezone
 from datetime import timedelta
 import uuid
@@ -30,7 +30,7 @@ class UserManager(BaseUserManager):
 
 
 # Данные пользователя
-class User(AbstractBaseUser, PermissionsMixin):
+class User(AbstractUser, PermissionsMixin):
     # GENDER_CHOICES = [
     #     ('M', 'Male'),
     #     ('F', 'Female'),
@@ -49,9 +49,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания аккаунта')
     verification_code = models.CharField(max_length=6, blank=True, null=True)
     code_expiry = models.DateTimeField(blank=True, null=True)
-    
-    is_staff = models.BooleanField(default=False)
-    is_superuser = models.BooleanField(default=False)
     
     USERNAME_FIELD = 'phone'
     REQUIRED_FIELDS = ['email']
