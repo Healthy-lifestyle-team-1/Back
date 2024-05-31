@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from user_app.models import User
 
 
 # Категории блюд
@@ -58,8 +58,13 @@ class Combination(models.Model):
         return f'{self.half1} - {self.half2.name}'
 
 
-# TODO Добавить отзыва
+class Article(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
+    date_created = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+    text = models.TextField(verbose_name='Текст')
 
+    def __str__(self):
+        return f'{self.author}|{self.date_created}|{self.text[:20]}'
 
 # =============== На доработке ===============
 # class Cart(models.Model):
