@@ -16,4 +16,4 @@ class VerifyCodeSerializer(serializers.Serializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserModel
-        fields = ('email', 'phone', 'username', 'fam')
+        fields = ('email', 'phone', 'username')

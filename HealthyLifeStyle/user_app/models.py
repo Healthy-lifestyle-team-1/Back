@@ -1,6 +1,6 @@
 from django.db import models
-from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
-from django.contrib.auth.models import PermissionsMixin, AbstractUser
+from django.contrib.auth.base_user import BaseUserManager
+from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.utils import timezone
 from datetime import timedelta
 import uuid
@@ -45,7 +45,6 @@ class User(AbstractUser, PermissionsMixin):
     # weight = models.FloatField(max_length=3, null=True, verbose_name='Вес')
     # height = models.FloatField(max_length=3, null=True, verbose_name='Рост')
     # age = models.IntegerField(max_length=3, null=True, verbose_name='Возраст')
-    # allergies = models.TextField(blank=True, null=True, verbose_name='Список аллергенов')
     date_joined = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания аккаунта')
     verification_code = models.CharField(max_length=6, blank=True, null=True)
     code_expiry = models.DateTimeField(blank=True, null=True)
