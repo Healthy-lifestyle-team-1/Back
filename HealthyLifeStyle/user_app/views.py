@@ -1,38 +1,78 @@
 from django.contrib.auth import login, logout
+from django.utils import timezone
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import permissions, status
-from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer
-from .validations import custom_validation, validate_login, validate_password
+from .models import User
+from .serializers import UserLoginRegisterSerializer, VerifyCodeSerializer, UserSerializer
+from .utils import send_verification_code_email, send_verification_code_sms
 
 
 class UserRegisterViewSet(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
-        clean_data = custom_validation(request.data)
-        validate_password(request.data)
-        serializer = UserRegisterSerializer(data=clean_data)
-        if serializer.is_valid(raise_exception=True):
-            user = serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        serializer = UserLoginRegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            login = serializer.validated_data.get('login')
+            if '@' in login:
+                user = User.objects.create(email=login)
+                code = user.generate_verification_code()
+                send_verification_code_email(login, code)
+            else:
+                user = User.objects.create(phone=login)
+                code = user.generate_verification_code()
+                send_verification_code_sms(login, code)
+            
+            return Response({'detail': 'Verification code sent'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserLoginViewSet(APIView):
     permission_classes = (permissions.AllowAny,)
-    authentication_classes = (SessionAuthentication,)
 
     def post(self, request):
-        data = request.data
-        validate_login(data)
-        serializer = UserLoginSerializer(data=data)
-        if serializer.is_valid(raise_exception=True):
-            user, backend = serializer.check_user(serializer.validated_data)
-            user.backend = backend
-            login(request, user, backend=backend)
-            return Response({'detail': 'Login successful'}, status=status.HTTP_200_OK)
+        serializer = UserLoginRegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            login = serializer.validated_data.get('login')
+            if '@' in login:
+                user = User.objects.filter(email=login).first()
+                if user:
+                    code = user.generate_verification_code()
+                    send_verification_code_email(login, code)
+            else:
+                user = User.objects.filter(phone=login).first()
+                if user:
+                    code = user.generate_verification_code()
+                    send_verification_code_sms(login, code)
+            
+            return Response({'detail': 'Verification code sent'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class VerifyCodeViewSet(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request):
+        serializer = VerifyCodeSerializer(data=request.data)
+        if serializer.is_valid():
+            user_login = serializer.validated_data.get('login')
+            code = serializer.validated_data.get('code')
+            
+            if '@' in user_login:
+                user = User.objects.filter(email=user_login, verification_code=code).first()
+            else:
+                user = User.objects.filter(phone=user_login, verification_code=code).first()
+            
+            if user and user.code_expiry > timezone.now():
+                user.verification_code = None
+                user.code_expiry = None
+                user.save()
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                return Response({'detail': 'Login successful'}, status=status.HTTP_200_OK)
+            
+            return Response({'detail': 'Invalid or expired code'}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
