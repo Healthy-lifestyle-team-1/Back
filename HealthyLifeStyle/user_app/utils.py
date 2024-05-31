@@ -4,7 +4,7 @@ from django.conf import settings
 
 def send_verification_code_email(email, code):
     send_mail(
-        'Your verification code',
+        'Verification code',
         f'Your verification code is {code}',
         settings.DEFAULT_FROM_EMAIL,
         [email],

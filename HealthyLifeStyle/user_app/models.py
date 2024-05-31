@@ -6,9 +6,10 @@ from datetime import timedelta
 import uuid
 
 
+# Модель менеджера
 class UserManager(BaseUserManager):
-    def create_user(self, password=None, **extra_fields):
-        user = self.model(**extra_fields)
+    def create_user(self, phone, email, password=None, **extra_fields):
+        user = self.model(phone=phone, email=email, **extra_fields)
         if password:
             user.set_password(password)
         else:
@@ -16,7 +17,7 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, phone, password=None, **extra_fields):
+    def create_superuser(self, phone, email, password, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
 
@@ -25,7 +26,7 @@ class UserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
 
-        return self.create_user(phone, password, **extra_fields)
+        return self.create_user(phone, email, password, **extra_fields)
 
 
 # Данные пользователя
@@ -34,24 +35,26 @@ class User(AbstractBaseUser, PermissionsMixin):
     #     ('M', 'Male'),
     #     ('F', 'Female'),
     # ]
+    objects = UserManager()
 
     username = models.CharField(max_length=10, null=True, verbose_name='Имя')
-    fam = models.CharField(max_length=20, null=True, verbose_name='Фамилия')
     phone = models.CharField(max_length=15, null=True, unique=True, verbose_name='Телефон')
-    email = models.EmailField(max_length=50, unique=True, null=True, blank=True)
-    password = models.CharField(max_length=20, null=True, blank=True)
+    email = models.EmailField(max_length=50, null=True, blank=True, unique=True)
+    password = models.CharField(max_length=20, null=True, blank=True, verbose_name='Пароль')
     # gender = models.CharField(max_length=1, null=True, choices=GENDER_CHOICES, verbose_name='Пол')
     # weight = models.FloatField(max_length=3, null=True, verbose_name='Вес')
     # height = models.FloatField(max_length=3, null=True, verbose_name='Рост')
     # age = models.IntegerField(max_length=3, null=True, verbose_name='Возраст')
     # allergies = models.TextField(blank=True, null=True, verbose_name='Список аллергенов')
     date_joined = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания аккаунта')
-    
     verification_code = models.CharField(max_length=6, blank=True, null=True)
     code_expiry = models.DateTimeField(blank=True, null=True)
     
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
+    
     USERNAME_FIELD = 'phone'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['email']
     
     def generate_verification_code(self):
         code = str(uuid.uuid4().int)[:6]
@@ -61,5 +64,5 @@ class User(AbstractBaseUser, PermissionsMixin):
         return code
     
     def __str__(self):
-        return f'{self.username} {self.fam}'
+        return f'{self.phone}'
     
