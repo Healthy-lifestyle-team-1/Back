@@ -1,14 +1,14 @@
 from django.db import models
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
-from django.contrib.auth.models import PermissionsMixin
+from django.contrib.auth.models import PermissionsMixin, AbstractUser
 from django.utils import timezone
 from datetime import timedelta
 import uuid
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, password=None, **extra_fields):
-        user = self.model(**extra_fields)
+    def create_user(self, phone, password=None, **extra_fields):
+        user = self.model(phone=phone, **extra_fields)
         if password:
             user.set_password(password)
         else:
@@ -29,14 +29,15 @@ class UserManager(BaseUserManager):
 
 
 # Данные пользователя
-class User(AbstractBaseUser, PermissionsMixin):
+class User(AbstractUser, PermissionsMixin):
     # GENDER_CHOICES = [
     #     ('M', 'Male'),
     #     ('F', 'Female'),
     # ]
+    objects = UserManager()
 
     username = models.CharField(max_length=10, null=True, verbose_name='Имя')
-    fam = models.CharField(max_length=20, null=True, verbose_name='Фамилия')
+    # fam = models.CharField(max_length=20, null=True, verbose_name='Фамилия') Думаю, сделать необязательной
     phone = models.CharField(max_length=15, null=True, unique=True, verbose_name='Телефон')
     email = models.EmailField(max_length=50, unique=True, null=True, blank=True)
     password = models.CharField(max_length=20, null=True, blank=True)
@@ -61,5 +62,5 @@ class User(AbstractBaseUser, PermissionsMixin):
         return code
     
     def __str__(self):
-        return f'{self.username} {self.fam}'
+        return f'{self.phone}'
     
