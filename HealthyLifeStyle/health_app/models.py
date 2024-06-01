@@ -11,6 +11,13 @@ class Category(models.Model):
         return self.name
 
 
+class Product(models.Model):
+    name = models.CharField(max_length=255, verbose_name='Название')
+
+    def __str__(self):
+        return self.name
+
+
 # Аллергия
 class Allergy(models.Model):
     # Коровье молоко
@@ -31,8 +38,7 @@ class Allergy(models.Model):
 class DishHalf(models.Model):
     name = models.CharField(max_length=255, unique=True, verbose_name='Название')
     category = models.ForeignKey(Category, related_name='dish_halves', on_delete=models.CASCADE, null=True, blank=True, verbose_name='Категория')
-    image = models.ImageField(upload_to='images/', blank=True, null=True)
-    # TODO Уточнить работу API с фото
+    image = models.ImageField(upload_to='images/', verbose_name='Фотография') # Можно поставить default
     calories = models.FloatField(max_length=10, verbose_name='Калории')
     proteins = models.FloatField(max_length=10, verbose_name='Протеины')
     fats = models.FloatField(max_length=10, verbose_name='Жиры')
@@ -40,6 +46,7 @@ class DishHalf(models.Model):
     price = models.DecimalField(max_digits=6, decimal_places=2, verbose_name='Цена')
     contraindications = models.ManyToManyField(Allergy, blank=True, verbose_name='Противопоказания')
     rating = models.DecimalField(max_digits=3, decimal_places=2, null=True) # 4.11
+    products = models.ManyToManyField(Product, blank=True, verbose_name='Продукты')
 
     def __str__(self):
         return self.name
@@ -67,6 +74,7 @@ class Article(models.Model):
 
     def __str__(self):
         return f'{self.author}|{self.date_created}|{self.text[:20]}'
+
 
 # =============== На доработке ===============
 # class Cart(models.Model):

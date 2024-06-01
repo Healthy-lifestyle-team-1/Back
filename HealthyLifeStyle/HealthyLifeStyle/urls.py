@@ -30,12 +30,17 @@ from health_app import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('', include(router.urls)),
+
+    # Подключеие моделей
     path('category/', views.CategoryViewSet.as_view()),
     path('dishhalf/', views.DishHalfViewSet.as_view()),
     path('combination/', views.CombinationViewSet.as_view()),
     path('allergy/', views.AllergyViewSet.as_view()),
     path('article/', views.ArticleViewSet.as_view()),
+    path('product/', views.ProductViewSet.as_view()),
+
+    # Включение ckeditor5
     path("ckeditor5/", include('django_ckeditor_5.urls')),
     path('', include('user_app.urls')),
+    # path('', include(router.urls)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

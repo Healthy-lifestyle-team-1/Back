@@ -95,3 +95,13 @@ class ArticleViewSet(generics.ListCreateAPIView):
         else:
             self.permission_classes = [permissions.IsAdminUser]
         return super().get_permissions()
+
+
+class ProductViewSet(generics.ListCreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['name']
+    search_fields = ['name']
+    ordering_fields = ['name']
+    ordering = ['name']
