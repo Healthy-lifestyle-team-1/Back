@@ -39,7 +39,7 @@ class User(AbstractUser, PermissionsMixin):
 
     username = models.CharField(max_length=10, null=True, verbose_name='Имя')
     phone = models.CharField(max_length=15, null=True, unique=True, verbose_name='Телефон')
-    email = models.EmailField(max_length=50, null=True, blank=True, unique=True)
+    email = models.EmailField(max_length=50, null=True, blank=True)
     password = models.CharField(max_length=20, null=True, blank=True, verbose_name='Пароль')
     # gender = models.CharField(max_length=1, null=True, choices=GENDER_CHOICES, verbose_name='Пол')
     # weight = models.FloatField(max_length=3, null=True, verbose_name='Вес')
@@ -60,5 +60,5 @@ class User(AbstractUser, PermissionsMixin):
         return code
     
     def __str__(self):
-        return f'{self.phone}'
+        return f'{self.username}|{self.phone}'
     
