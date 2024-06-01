@@ -84,10 +84,11 @@ class ArticleViewSet(generics.ListCreateAPIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['author', 'date_created', 'text']
-    search_fields = ['author', 'date_created', 'text']
-    ordering_fields = ['author', 'date_created', 'text']
+    filterset_fields = ['author', 'date_created']
+    search_fields = ['author', 'date_created']
+    ordering_fields = ['author', 'date_created']
     ordering = '-date_created'
+
 
     def get_permissions(self):
         if self.request.method == 'GET':

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_filters',
     'django_ckeditor_5',
+    'drf_yasg',
     # подключаем приложения allauth
     'allauth',
     'allauth.account',
