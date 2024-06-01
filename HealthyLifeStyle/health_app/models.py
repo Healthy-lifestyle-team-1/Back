@@ -1,5 +1,6 @@
 from django.db import models
 from user_app.models import User
+from django_ckeditor_5.fields import CKEditor5Field
 
 
 # Категории блюд
@@ -61,7 +62,8 @@ class Combination(models.Model):
 class Article(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
     date_created = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
-    text = models.TextField(verbose_name='Текст')
+    # text = models.TextField(verbose_name='Текст')
+    text = CKEditor5Field('Text', config_name='extends')
 
     def __str__(self):
         return f'{self.author}|{self.date_created}|{self.text[:20]}'
