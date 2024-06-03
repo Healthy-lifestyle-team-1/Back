@@ -1,4 +1,4 @@
-from django.contrib.auth import login, logout
+from django.contrib.auth import login as auth_login, logout
 from django.utils import timezone
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.views import APIView
@@ -57,19 +57,19 @@ class VerifyCodeViewSet(APIView):
     def post(self, request):
         serializer = VerifyCodeSerializer(data=request.data)
         if serializer.is_valid():
-            user_login = serializer.validated_data.get('login')
+            login = serializer.validated_data.get('login')
             code = serializer.validated_data.get('code')
             
-            if '@' in user_login:
-                user = User.objects.filter(email=user_login, verification_code=code).first()
+            if '@' in login:
+                user = User.objects.filter(email=login, verification_code=code).first()
             else:
-                user = User.objects.filter(phone=user_login, verification_code=code).first()
+                user = User.objects.filter(phone=login, verification_code=code).first()
             
             if user and user.code_expiry > timezone.now():
                 user.verification_code = None
                 user.code_expiry = None
                 user.save()
-                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 return Response({'detail': 'Login successful'}, status=status.HTTP_200_OK)
             
             return Response({'detail': 'Invalid or expired code'}, status=status.HTTP_400_BAD_REQUEST)
@@ -92,3 +92,17 @@ class UserViewSet(APIView):
     def get(self, request):
         serializer = UserSerializer(request.user)
         return Response({'user': serializer.data}, status=status.HTTP_200_OK)
+
+
+class UserUpdateViewSet(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+        serializer = UserSerializer(user, data=request.data, partial=True)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

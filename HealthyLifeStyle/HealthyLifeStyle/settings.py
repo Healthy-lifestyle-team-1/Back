@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     # ... вносим разрешённых провайдеров
     'allauth.socialaccount.providers.google',
+    'smsc_api',
 ]
 
 MIDDLEWARE = [
@@ -166,6 +167,14 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Настройки для отправки СМС
+SMSC_LOGIN = config('SMSC_LOGIN')
+SMSC_PASSWORD = config('SMSC_PASSWORD')
+SMSC_POST = True 
+SMSC_HTTPS = False
+SMSC_CHARSET = 'utf-8'
+SMSC_DEBUG = True
 
 # Настройки для отправки почты
 EMAIL_USE_SSL = False
