@@ -31,10 +31,16 @@ class UserManager(BaseUserManager):
 
 # Данные пользователя
 class User(AbstractUser, PermissionsMixin):
+
+    class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+
     # GENDER_CHOICES = [
     #     ('M', 'Male'),
     #     ('F', 'Female'),
     # ]
+    
     objects = UserManager()
 
     username = models.CharField(max_length=10, null=True, verbose_name='Имя')
