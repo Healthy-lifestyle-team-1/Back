@@ -7,11 +7,15 @@ class UserLoginRegisterSerializer(serializers.Serializer):
     login = serializers.CharField()
     
     def validate_login(self, value):
+        if not value:
+            raise serializers.ValidationError("Login field is required.")
         if '@' in value:
             if re.fullmatch(r'\d+', value):
                 raise serializers.ValidationError("Email must contain more than just digits.")
             if not re.fullmatch(r"[^@]+@[^@]+\.[^@]+", value):
                 raise serializers.ValidationError("Enter a valid email address.")
+            if User.objects.filter(email=value).exists():
+                raise serializers.ValidationError("This email is already in use.")
         else:
             if not value.isdigit():
                 raise serializers.ValidationError("Phone number must contain only digits.")
@@ -19,9 +23,7 @@ class UserLoginRegisterSerializer(serializers.Serializer):
                 raise serializers.ValidationError("Phone number must be exactly 11 digits.")
             if User.objects.filter(phone=value).exists():
                 raise serializers.ValidationError("This phone number is already in use.")
-        
-        if User.objects.filter(email=value).exists():
-            raise serializers.ValidationError("This email is already in use.")
+        return value
 
 
 class VerifyCodeSerializer(serializers.Serializer):
