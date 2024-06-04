@@ -53,7 +53,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     # ... вносим разрешённых провайдеров
     'allauth.socialaccount.providers.google',
-    'smsc_api',
 ]
 
 MIDDLEWARE = [
@@ -71,9 +70,11 @@ MIDDLEWARE = [
 ## User model
 AUTH_USER_MODEL = 'user_app.User'
 
+# Настройки Rest Framework
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny'
+        'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly'
     ],
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
@@ -97,13 +98,6 @@ TEMPLATES = [
         },
     },
 ]
-
-# Настройки Rest Framework
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly'
-    ]
-}
 
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
