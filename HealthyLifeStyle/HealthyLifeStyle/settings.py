@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     # ... вносим разрешённых провайдеров
     'allauth.socialaccount.providers.google',
-    'smsc_api',
+    # 'smsc_api',
 ]
 
 MIDDLEWARE = [
@@ -68,12 +68,13 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
-## User model
+# User model
 AUTH_USER_MODEL = 'user_app.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny'
+        'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
@@ -99,14 +100,14 @@ TEMPLATES = [
 ]
 
 # Настройки Rest Framework
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly'
-    ]
-}
+# REST_FRAMEWORK = {
+#     'DEFAULT_PERMISSION_CLASSES': [
+#         'rest_framework.permissions.IsAuthenticatedOrReadOnly'
+#     ]
+# }
 
 AUTHENTICATION_BACKENDS = [
-    # Needed to login by username in Django admin, regardless of `allauth`
+    # Needed to log by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',
 
     # `allauth` specific authentication methods, such as login by e-mail
@@ -161,7 +162,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+# STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -171,7 +172,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Настройки для отправки СМС
 SMSC_LOGIN = config('SMSC_LOGIN')
 SMSC_PASSWORD = config('SMSC_PASSWORD')
-SMSC_POST = True 
+SMSC_POST = True
 SMSC_HTTPS = False
 SMSC_CHARSET = 'utf-8'
 SMSC_DEBUG = True
@@ -238,7 +239,7 @@ CKEDITOR_5_CONFIGS = {
           'blockQuote',
       ],
       'toolbar': ['heading', '|', 'outdent', 'indent', '|', 'bold', 'italic', 'link', 'underline', 'strikethrough',
-      'code','subscript', 'superscript', 'highlight', '|', 'codeBlock', 'sourceEditing', 'insertImage',
+      'code', 'subscript', 'superscript', 'highlight', '|', 'codeBlock', 'sourceEditing', 'insertImage',
                   'bulletedList', 'numberedList', 'todoList', '|',  'blockQuote', 'imageUpload', '|',
                   'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'mediaEmbed', 'removeFormat',
                   'insertTable',],
@@ -255,8 +256,8 @@ CKEDITOR_5_CONFIGS = {
 
       },
       'table': {
-          'contentToolbar': [ 'tableColumn', 'tableRow', 'mergeTableCells',
-          'tableProperties', 'tableCellProperties' ],
+          'contentToolbar': ['tableColumn', 'tableRow', 'mergeTableCells',
+          'tableProperties', 'tableCellProperties'],
           'tableProperties': {
               'borderColors': customColorPalette,
               'backgroundColors': customColorPalette
@@ -266,12 +267,12 @@ CKEDITOR_5_CONFIGS = {
               'backgroundColors': customColorPalette
           }
       },
-      'heading' : {
+      'heading': {
           'options': [
-              { 'model': 'paragraph', 'title': 'Paragraph', 'class': 'ck-heading_paragraph' },
-              { 'model': 'heading1', 'view': 'h1', 'title': 'Heading 1', 'class': 'ck-heading_heading1' },
-              { 'model': 'heading2', 'view': 'h2', 'title': 'Heading 2', 'class': 'ck-heading_heading2' },
-              { 'model': 'heading3', 'view': 'h3', 'title': 'Heading 3', 'class': 'ck-heading_heading3' }
+              {'model': 'paragraph', 'title': 'Paragraph', 'class': 'ck-heading_paragraph'},
+              {'model': 'heading1', 'view': 'h1', 'title': 'Heading 1', 'class': 'ck-heading_heading1'},
+              {'model': 'heading2', 'view': 'h2', 'title': 'Heading 2', 'class': 'ck-heading_heading2'},
+              {'model': 'heading3', 'view': 'h3', 'title': 'Heading 3', 'class': 'ck-heading_heading3'}
           ]
       }
   },

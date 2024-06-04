@@ -3,6 +3,7 @@ import urllib.parse
 import urllib.request
 import json
 
+
 class SMSC:
     def __init__(self, login=None, password=None):
         from django.conf import settings
