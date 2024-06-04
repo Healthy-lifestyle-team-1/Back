@@ -53,7 +53,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     # ... вносим разрешённых провайдеров
     'allauth.socialaccount.providers.google',
-    # 'smsc_api',
 ]
 
 MIDDLEWARE = [
@@ -74,7 +73,7 @@ AUTH_USER_MODEL = 'user_app.User'
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly'
     ],
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
@@ -98,13 +97,6 @@ TEMPLATES = [
         },
     },
 ]
-
-# Настройки Rest Framework
-# REST_FRAMEWORK = {
-#     'DEFAULT_PERMISSION_CLASSES': [
-#         'rest_framework.permissions.IsAuthenticatedOrReadOnly'
-#     ]
-# }
 
 AUTHENTICATION_BACKENDS = [
     # Needed to log by username in Django admin, regardless of `allauth`
@@ -172,7 +164,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Настройки для отправки СМС
 SMSC_LOGIN = config('SMSC_LOGIN')
 SMSC_PASSWORD = config('SMSC_PASSWORD')
-SMSC_POST = True
+SMSC_POST = True 
 SMSC_HTTPS = False
 SMSC_CHARSET = 'utf-8'
 SMSC_DEBUG = True
