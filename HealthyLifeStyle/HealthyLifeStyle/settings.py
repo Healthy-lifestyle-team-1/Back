@@ -70,6 +70,7 @@ MIDDLEWARE = [
 # User model
 AUTH_USER_MODEL = 'user_app.User'
 
+# Настройки Rest Framework
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',

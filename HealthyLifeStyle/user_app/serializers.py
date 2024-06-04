@@ -1,19 +1,13 @@
 from rest_framework import serializers
 from .models import User
-import re
 
 
-class UserLoginRegisterSerializer(serializers.Serializer):
-    login = serializers.CharField()
+class UserRegisterSerializer(serializers.Serializer):
+    login = serializers.CharField(required=True)
+    username = serializers.CharField(required=True)
     
     def validate_login(self, value):
-        if not value:
-            raise serializers.ValidationError("Login field is required.")
         if '@' in value:
-            if re.fullmatch(r'\d+', value):
-                raise serializers.ValidationError("Email must contain more than just digits.")
-            if not re.fullmatch(r"[^@]+@[^@]+\.[^@]+", value):
-                raise serializers.ValidationError("Enter a valid email address.")
             if User.objects.filter(email=value).exists():
                 raise serializers.ValidationError("This email is already in use.")
         else:
@@ -26,9 +20,13 @@ class UserLoginRegisterSerializer(serializers.Serializer):
         return value
 
 
+class UserLoginSerializer(serializers.Serializer):
+    login = serializers.CharField(required=True)
+
+
 class VerifyCodeSerializer(serializers.Serializer):
-    login = serializers.CharField()
-    code = serializers.CharField()
+    login = serializers.CharField(required=True)
+    code = serializers.CharField(required=True)
 
 
 class UserSerializer(serializers.ModelSerializer):
