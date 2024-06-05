@@ -6,9 +6,13 @@ git clone https://github.com/Healthy-lifestyle-team-1/Back
 cd HealthyLifeStyle
 ```
 
+### Создайте файл .env в корневой папке и укажите переменные для смс отправлений:
+```
+```
+
 ### Активируйте виртуальное окружение проекта:
 ```commandline
-$ pip install -r ../requirements.txt
+pip install -r ../requirements.txt
 ```
 
 ### Сделайте миграции:
