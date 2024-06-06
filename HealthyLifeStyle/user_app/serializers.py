@@ -25,7 +25,6 @@ class UserLoginSerializer(serializers.Serializer):
 
 
 class VerifyCodeSerializer(serializers.Serializer):
-    login = serializers.CharField(required=True)
     code = serializers.CharField(required=True)
 
 

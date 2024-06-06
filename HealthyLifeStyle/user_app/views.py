@@ -58,13 +58,8 @@ class VerifyCodeViewSet(APIView):
     def post(self, request):
         serializer = VerifyCodeSerializer(data=request.data)
         if serializer.is_valid():
-            login = serializer.validated_data.get('login')
             code = serializer.validated_data.get('code')
-            
-            if '@' in login:
-                user = User.objects.filter(email=login, verification_code=code).first()
-            else:
-                user = User.objects.filter(phone=login, verification_code=code).first()
+            user = User.objects.filter(verification_code=code).first()
             
             if user and user.code_expiry > timezone.now():
                 user.verification_code = None
