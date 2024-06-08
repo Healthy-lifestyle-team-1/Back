@@ -88,7 +88,7 @@ class Rating(models.Model):
         verbose_name_plural = 'Рейтинги'
 
     def __str__(self):
-        return f'{self.user}|{self.dishhalf}|{self.value}'
+        return f'{self.user.username}|{self.dishhalf}|{self.value}'
 
 
 # Комбинации
