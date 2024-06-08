@@ -79,8 +79,12 @@ class DishHalf(models.Model):
 
 class Rating(models.Model):
     dishhalf = models.ForeignKey(DishHalf, related_name='rating', on_delete=models.CASCADE, verbose_name='Половинка')
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    value = models.IntegerField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
+    value = models.IntegerField(verbose_name='Оценка')
+
+    class Meta:
+        verbose_name = 'Рейтинг'
+        verbose_name_plural = 'Рейтинги'
 
     def __str__(self):
         return f'{self.user}|{self.dishhalf}|{self.value}'
@@ -103,6 +107,7 @@ class Combination(models.Model):
             return f'{self.half1.name} - {self.half2.name}'
         else:
             return self.half1.name
+
 
 class Article(models.Model):
 

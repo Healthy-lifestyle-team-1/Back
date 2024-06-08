@@ -51,6 +51,10 @@ class RatingViewSet(generics.ListCreateAPIView):
     queryset = Rating.objects.all()
     serializer_class = RatingSerializer
     permission_classes = [permissions.AllowAny]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['dishhalf', 'value']
+    search_fields = ['dishhalf', 'value']
+    ordering_fields = ['dishhalf', 'value']
 
 
 class CombinationViewSet(generics.ListCreateAPIView):
@@ -94,7 +98,6 @@ class ArticleViewSet(generics.ListCreateAPIView):
     search_fields = ['author', 'date_created']
     ordering_fields = ['author', 'date_created']
     ordering = '-date_created'
-
 
     def get_permissions(self):
         if self.request.method == 'GET':
