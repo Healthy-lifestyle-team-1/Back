@@ -16,6 +16,12 @@ class DishHalfSerializer(serializers.ModelSerializer):
                   'proteins', 'fats', 'carbs', 'price', 'rating']
 
 
+class RatingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rating
+        fields = ['dishhalf', 'user', 'value']
+
+
 class CombinationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Combination

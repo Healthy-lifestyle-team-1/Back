@@ -9,7 +9,7 @@ def send_verification_code_email(email, code):
         f'Ваш код верификации на платформе «ЗОЖНИК»: {code}',
         settings.DEFAULT_FROM_EMAIL,
         [email],
-        fail_silently=False,
+        #fail_silently=False,
     )
 
 

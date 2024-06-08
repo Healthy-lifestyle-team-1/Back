@@ -171,6 +171,7 @@ SMSC_CHARSET = 'utf-8'
 SMSC_DEBUG = True
 
 # Настройки для отправки почты
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_SSL = False
 EMAIL_USE_TLS = True
 EMAIL_HOST = config('EMAIL_HOST')
@@ -183,7 +184,7 @@ APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
 
 APSCHEDULER_RUN_NOW_TIMEOUT = 25  # секунды
 if DEBUG:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 
 STATIC_URL = '/static/'

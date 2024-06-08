@@ -64,11 +64,26 @@ class DishHalf(models.Model):
     carbs = models.FloatField(max_length=10, verbose_name='Углеводы')
     price = models.DecimalField(max_digits=6, decimal_places=2, verbose_name='Цена')
     contraindications = models.ManyToManyField(Allergy, blank=True, verbose_name='Противопоказания')
-    rating = models.DecimalField(max_digits=3, decimal_places=2, null=True) # 4.11
+    # rating = models.DecimalField(max_digits=3, decimal_places=2, null=True) # 4.11
     products = models.ManyToManyField(Product, blank=True, verbose_name='Продукты')
+
+    def average_rating(self):
+        rating = self.rating.all()
+        if rating:
+            return sum(rate.value for rate in rating) / len(rating)
+        return 0
 
     def __str__(self):
         return self.name
+
+
+class Rating(models.Model):
+    dishhalf = models.ForeignKey(DishHalf, related_name='rating', on_delete=models.CASCADE, verbose_name='Половинка')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    value = models.IntegerField()
+
+    def __str__(self):
+        return f'{self.user}|{self.dishhalf}|{self.value}'
 
 
 # Комбинации
@@ -76,7 +91,7 @@ class Combination(models.Model):
     half1 = models.ForeignKey(DishHalf, related_name='half1', on_delete=models.CASCADE,
                               null=True, verbose_name='Первая половина')
     half2 = models.ForeignKey(DishHalf, related_name='half2', on_delete=models.CASCADE,
-                              null=True, verbose_name='Вторая половина')
+                              null=True, verbose_name='Вторая половина', blank=True)
 
     class Meta:
         verbose_name = 'Комбинация'
@@ -84,8 +99,10 @@ class Combination(models.Model):
         unique_together = ('half1', 'half2')
 
     def __str__(self):
-        return f'{self.half1} - {self.half2.name}'
-
+        if self.half2:
+            return f'{self.half1.name} - {self.half2.name}'
+        else:
+            return self.half1.name
 
 class Article(models.Model):
 

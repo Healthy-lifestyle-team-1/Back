@@ -54,6 +54,7 @@ urlpatterns = [
     # Подключеие моделей
     path('category/', views.CategoryViewSet.as_view()),
     path('dishhalf/', views.DishHalfViewSet.as_view()),
+    path('rating', views.RatingViewSet.as_view()),
     path('combination/', views.CombinationViewSet.as_view()),
     path('allergy/', views.AllergyViewSet.as_view()),
     path('article/', views.ArticleViewSet.as_view()),
