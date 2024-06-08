@@ -37,9 +37,9 @@ from django.urls import re_path
 
 schema_view = get_schema_view(
    openapi.Info(
-      title="Snippets API",
+      title="Zozhnik API",
       default_version='v1',
-      description="Test description",
+      description="API for Zozhnik",
       terms_of_service="https://www.google.com/policies/terms/",
       contact=openapi.Contact(email="contact@snippets.local"),
       license=openapi.License(name="BSD License"),
@@ -54,11 +54,16 @@ urlpatterns = [
     # Подключеие моделей
     path('category/', views.CategoryViewSet.as_view()),
     path('dishhalf/', views.DishHalfViewSet.as_view()),
-    path('rating', views.RatingViewSet.as_view()),
+    path('rating/', views.RatingViewSet.as_view()),
     path('combination/', views.CombinationViewSet.as_view()),
     path('allergy/', views.AllergyViewSet.as_view()),
     path('article/', views.ArticleViewSet.as_view()),
     path('product/', views.ProductViewSet.as_view()),
+
+    path('category/<int:pk>/', views.CategoryUpdateView.as_view()),
+    path('dishhalf/<int:pk>/', views.DishHalfUpdateView.as_view()),
+    path('allergy/<int:pk>/', views.AllergyUpdateView.as_view()),
+    path('article/<int:pk>/', views.ArticleUpdateView.as_view()),
 
     # Документация
     path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),

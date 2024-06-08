@@ -66,6 +66,7 @@ class DishHalf(models.Model):
     contraindications = models.ManyToManyField(Allergy, blank=True, verbose_name='Противопоказания')
     # rating = models.DecimalField(max_digits=3, decimal_places=2, null=True) # 4.11
     products = models.ManyToManyField(Product, blank=True, verbose_name='Продукты')
+    # TODO Добавить поле готовый_продукт_или_нет
 
     def average_rating(self):
         rating = self.rating.all()
@@ -96,11 +97,17 @@ class Combination(models.Model):
                               null=True, verbose_name='Первая половина')
     half2 = models.ForeignKey(DishHalf, related_name='half2', on_delete=models.CASCADE,
                               null=True, verbose_name='Вторая половина', blank=True)
+    # TODO Добавить цену
 
     class Meta:
         verbose_name = 'Комбинация'
         verbose_name_plural = 'Комбинации'
         unique_together = ('half1', 'half2')
+
+    def get_price(self):
+        if self.half2:
+            return self.half1.price + self.half2.price
+        return self.half1.price
 
     def __str__(self):
         if self.half2:

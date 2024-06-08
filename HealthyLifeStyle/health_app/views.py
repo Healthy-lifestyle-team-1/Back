@@ -115,3 +115,34 @@ class ProductViewSet(generics.ListCreateAPIView):
     search_fields = ['name']
     ordering_fields = ['name']
     ordering = ['name']
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            self.permission_classes = [permissions.AllowAny]
+        else:
+            self.permission_classes = [permissions.IsAdminUser]
+        return super().get_permissions()
+
+
+class CategoryUpdateView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = [permissions.IsAdminUser]
+
+
+class DishHalfUpdateView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = DishHalf.objects.all()
+    serializer_class = DishHalfSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+
+class AllergyUpdateView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Allergy.objects.all()
+    serializer_class = AllergySerializer
+    permission_classes = [permissions.IsAdminUser]
+
+
+class ArticleUpdateView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
+    permission_classes = [permissions.IsAdminUser]
