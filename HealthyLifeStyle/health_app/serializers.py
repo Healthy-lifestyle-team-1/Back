@@ -9,9 +9,9 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ['name']
 
 
-class DishHalfSerializer(serializers.ModelSerializer):
+class ProductSerializer(serializers.ModelSerializer):
     class Meta:
-        model = DishHalf
+        model = Product
         fields = ['name', 'category', 'image', 'calories',
                   'proteins', 'fats', 'carbs', 'price', 'rating']
 
@@ -20,12 +20,6 @@ class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
         fields = ['dishhalf', 'user', 'value']
-
-
-class CombinationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Combination
-        fields = ['half1', 'half2']
 
 
 class AllergySerializer(serializers.ModelSerializer):
@@ -40,7 +34,13 @@ class ArticleSerializer(serializers.ModelSerializer):
         fields = ['author', 'date_created', 'text']
 
 
-class ProductSerializer(serializers.ModelSerializer):
+class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Product
+        model = Ingredient
         fields = ['name']
+
+
+# class CombinationSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Combination
+#         fields = ['half1', 'half2']

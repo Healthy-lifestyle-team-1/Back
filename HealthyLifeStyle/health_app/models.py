@@ -16,10 +16,10 @@ class Category(models.Model):
         return self.name
 
 
-class Product(models.Model):
+class Ingredient(models.Model):
     class Meta:
-        verbose_name = 'Продукт'
-        verbose_name_plural = 'Продукты'
+        verbose_name = 'Ингредиент'
+        verbose_name_plural = 'Ингредиенты'
 
     name = models.CharField(max_length=255, verbose_name='Название')
 
@@ -49,14 +49,14 @@ class Allergy(models.Model):
 
 
 # Половинки тарелок
-class DishHalf(models.Model):
+class Product(models.Model):
 
     class Meta:
-        verbose_name = 'Половинка тарелки'
-        verbose_name_plural = 'Половинки тарелок'
+        verbose_name = 'Продукт'
+        verbose_name_plural = 'Продукты'
 
     name = models.CharField(max_length=255, unique=True, verbose_name='Название')
-    category = models.ForeignKey(Category, related_name='dish_halves', on_delete=models.CASCADE, null=True, blank=True, verbose_name='Категория')
+    category = models.ManyToManyField(Category, related_name='dish_halves', null=True, blank=True, verbose_name='Категория')
     image = models.ImageField(upload_to='images/', verbose_name='Фотография') # Можно поставить default
     calories = models.FloatField(max_length=10, verbose_name='Калории')
     proteins = models.FloatField(max_length=10, verbose_name='Протеины')
@@ -65,8 +65,8 @@ class DishHalf(models.Model):
     price = models.DecimalField(max_digits=6, decimal_places=2, verbose_name='Цена')
     contraindications = models.ManyToManyField(Allergy, blank=True, verbose_name='Противопоказания')
     # rating = models.DecimalField(max_digits=3, decimal_places=2, null=True) # 4.11
-    products = models.ManyToManyField(Product, blank=True, verbose_name='Продукты')
-    # TODO Добавить поле готовый_продукт_или_нет
+    ingredients = models.ManyToManyField(Ingredient, blank=True, verbose_name='Продукты')
+    is_prepared = models.BooleanField()
 
     def average_rating(self):
         rating = self.rating.all()
@@ -79,7 +79,7 @@ class DishHalf(models.Model):
 
 
 class Rating(models.Model):
-    dishhalf = models.ForeignKey(DishHalf, related_name='rating', on_delete=models.CASCADE, verbose_name='Половинка')
+    product = models.ForeignKey(Product, related_name='rating', on_delete=models.CASCADE, verbose_name='Половинка')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
     value = models.IntegerField(verbose_name='Оценка')
 
@@ -89,31 +89,6 @@ class Rating(models.Model):
 
     def __str__(self):
         return f'{self.user.username}|{self.dishhalf}|{self.value}'
-
-
-# Комбинации
-class Combination(models.Model):
-    half1 = models.ForeignKey(DishHalf, related_name='half1', on_delete=models.CASCADE,
-                              null=True, verbose_name='Первая половина')
-    half2 = models.ForeignKey(DishHalf, related_name='half2', on_delete=models.CASCADE,
-                              null=True, verbose_name='Вторая половина', blank=True)
-    # TODO Добавить цену
-
-    class Meta:
-        verbose_name = 'Комбинация'
-        verbose_name_plural = 'Комбинации'
-        unique_together = ('half1', 'half2')
-
-    def get_price(self):
-        if self.half2:
-            return self.half1.price + self.half2.price
-        return self.half1.price
-
-    def __str__(self):
-        if self.half2:
-            return f'{self.half1.name} - {self.half2.name}'
-        else:
-            return self.half1.name
 
 
 class Article(models.Model):
@@ -129,6 +104,31 @@ class Article(models.Model):
 
     def __str__(self):
         return f'{self.author}|{self.date_created}|{self.text[:20]}'
+
+
+# # Комбинации
+# class Combination(models.Model):
+#     half1 = models.ForeignKey(DishHalf, related_name='half1', on_delete=models.CASCADE,
+#                               null=True, verbose_name='Первая половина')
+#     half2 = models.ForeignKey(DishHalf, related_name='half2', on_delete=models.CASCADE,
+#                               null=True, verbose_name='Вторая половина', blank=True)
+#
+#     class Meta:
+#         verbose_name = 'Комбинация'
+#         verbose_name_plural = 'Комбинации'
+#         unique_together = ('half1', 'half2')
+#
+#     def get_price(self):
+#         if self.half2:
+#             return self.half1.price + self.half2.price
+#         return self.half1.price
+#
+#     def __str__(self):
+#         if self.half2:
+#             return f'{self.half1.name} - {self.half2.name}'
+#         else:
+#             return self.half1.name
+#
 
 
 # =============== На доработке ===============

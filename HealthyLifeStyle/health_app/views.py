@@ -24,9 +24,9 @@ class CategoryViewSet(generics.ListCreateAPIView):
         return super().get_permissions()
 
 
-class DishHalfViewSet(generics.ListCreateAPIView):
-    queryset = DishHalf.objects.all()
-    serializer_class = DishHalfSerializer
+class ProductViewSet(generics.ListCreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['name', 'category', 'calories',
                         'proteins', 'fats', 'carbs',
@@ -55,22 +55,6 @@ class RatingViewSet(generics.ListCreateAPIView):
     filterset_fields = ['dishhalf', 'value']
     search_fields = ['dishhalf', 'value']
     ordering_fields = ['dishhalf', 'value']
-
-
-class CombinationViewSet(generics.ListCreateAPIView):
-    queryset = Combination.objects.all()
-    serializer_class = CombinationSerializer
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['half1', 'half2']
-    search_fields = ['half1', 'half2']
-    ordering_fields = ['half1', 'half2']
-
-    def get_permissions(self):
-        if self.request.method == 'GET':
-            self.permission_classes = [permissions.AllowAny]
-        else:
-            self.permission_classes = [permissions.IsAdminUser]
-        return super().get_permissions()
 
 
 class AllergyViewSet(generics.ListCreateAPIView):
@@ -107,9 +91,9 @@ class ArticleViewSet(generics.ListCreateAPIView):
         return super().get_permissions()
 
 
-class ProductViewSet(generics.ListCreateAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
+class IngredientViewSet(generics.ListCreateAPIView):
+    queryset = Ingredient.objects.all()
+    serializer_class = IngredientSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['name']
     search_fields = ['name']
@@ -130,9 +114,9 @@ class CategoryUpdateView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAdminUser]
 
 
-class DishHalfUpdateView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = DishHalf.objects.all()
-    serializer_class = DishHalfSerializer
+class ProductUpdateView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
     permission_classes = [permissions.IsAdminUser]
 
 
@@ -146,3 +130,19 @@ class ArticleUpdateView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
     permission_classes = [permissions.IsAdminUser]
+
+
+# class CombinationViewSet(generics.ListCreateAPIView):
+#     queryset = Combination.objects.all()
+#     serializer_class = CombinationSerializer
+#     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+#     filterset_fields = ['half1', 'half2']
+#     search_fields = ['half1', 'half2']
+#     ordering_fields = ['half1', 'half2']
+#
+#     def get_permissions(self):
+#         if self.request.method == 'GET':
+#             self.permission_classes = [permissions.AllowAny]
+#         else:
+#             self.permission_classes = [permissions.IsAdminUser]
+#         return super().get_permissions()

@@ -53,15 +53,15 @@ urlpatterns = [
 
     # Подключеие моделей
     path('category/', views.CategoryViewSet.as_view()),
-    path('dishhalf/', views.DishHalfViewSet.as_view()),
+    path('product/', views.ProductViewSet.as_view()),
     path('rating/', views.RatingViewSet.as_view()),
-    path('combination/', views.CombinationViewSet.as_view()),
     path('allergy/', views.AllergyViewSet.as_view()),
     path('article/', views.ArticleViewSet.as_view()),
-    path('product/', views.ProductViewSet.as_view()),
+    path('product/', views.IngredientViewSet.as_view()),
+    # path('combination/', views.CombinationViewSet.as_view()),
 
     path('category/<int:pk>/', views.CategoryUpdateView.as_view()),
-    path('dishhalf/<int:pk>/', views.DishHalfUpdateView.as_view()),
+    path('product/<int:pk>/', views.ProductUpdateView.as_view()),
     path('allergy/<int:pk>/', views.AllergyUpdateView.as_view()),
     path('article/<int:pk>/', views.ArticleUpdateView.as_view()),
 
