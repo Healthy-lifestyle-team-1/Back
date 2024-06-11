@@ -56,7 +56,8 @@ class Product(models.Model):
         verbose_name_plural = 'Продукты'
 
     name = models.CharField(max_length=255, unique=True, verbose_name='Название')
-    category = models.ManyToManyField(Category, related_name='dish_halves', blank=True, verbose_name='Категория')
+    # category = models.ManyToManyField(Category, related_name='dish_halves', blank=True, verbose_name='Категория')
+    category = models.ManyToManyField(Category, blank=True, verbose_name='Категория')
     image = models.ImageField(upload_to='images/', verbose_name='Фотография')  # Можно поставить default
     calories = models.FloatField(max_length=10, verbose_name='Калории')
     proteins = models.FloatField(max_length=10, verbose_name='Протеины')
@@ -88,7 +89,7 @@ class Rating(models.Model):
         verbose_name_plural = 'Рейтинги'
 
     def __str__(self):
-        return f'{self.user.username}|{self.dishhalf}|{self.value}'
+        return f'{self.user.username}|{self.product}|{self.value}'
 
 
 class Article(models.Model):
