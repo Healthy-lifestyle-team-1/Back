@@ -19,7 +19,7 @@ class ProductSerializer(serializers.ModelSerializer):
 class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
-        fields = ['dishhalf', 'user', 'value']
+        fields = ['product', 'user', 'value']
 
 
 class AllergySerializer(serializers.ModelSerializer):

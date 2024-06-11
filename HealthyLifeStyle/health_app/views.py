@@ -52,9 +52,9 @@ class RatingViewSet(generics.ListCreateAPIView):
     serializer_class = RatingSerializer
     permission_classes = [permissions.AllowAny]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['dishhalf', 'value']
-    search_fields = ['dishhalf', 'value']
-    ordering_fields = ['dishhalf', 'value']
+    filterset_fields = ['product', 'value']
+    search_fields = ['product', 'value']
+    ordering_fields = ['product', 'value']
 
 
 class AllergyViewSet(generics.ListCreateAPIView):
