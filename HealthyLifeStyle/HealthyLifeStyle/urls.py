@@ -57,7 +57,7 @@ urlpatterns = [
     path('rating/', views.RatingViewSet.as_view()),
     path('allergy/', views.AllergyViewSet.as_view()),
     path('article/', views.ArticleViewSet.as_view()),
-    path('product/', views.IngredientViewSet.as_view()),
+    # path('product/', views.IngredientViewSet.as_view()),
     # path('combination/', views.CombinationViewSet.as_view()),
 
     path('category/<int:pk>/', views.CategoryUpdateView.as_view()),

@@ -16,17 +16,6 @@ class Category(models.Model):
         return self.name
 
 
-class Ingredient(models.Model):
-    class Meta:
-        verbose_name = 'Ингредиент'
-        verbose_name_plural = 'Ингредиенты'
-
-    name = models.CharField(max_length=255, verbose_name='Название')
-
-    def __str__(self):
-        return self.name
-
-
 # Аллергия
 class Allergy(models.Model):
     # Коровье молоко
@@ -65,9 +54,12 @@ class Product(models.Model):
     carbs = models.FloatField(max_length=10, verbose_name='Углеводы')
     price = models.DecimalField(max_digits=6, decimal_places=2, verbose_name='Цена')
     contraindications = models.ManyToManyField(Allergy, blank=True, verbose_name='Противопоказания')
+    cooking_method = models.TextField(default="", null=True)
+    # description = models.TextField()
+    weight = models.IntegerField(default=0, null=True)
     # rating = models.DecimalField(max_digits=3, decimal_places=2, null=True) # 4.11
-    ingredients = models.ManyToManyField(Ingredient, blank=True, verbose_name='Продукты')
-    is_prepared = models.BooleanField()
+    ingredients = models.TextField(blank=True, verbose_name='Продукты')
+    is_prepared = models.BooleanField(verbose_name='Готово')
 
     def average_rating(self):
         rating = self.rating.all()
@@ -106,6 +98,16 @@ class Article(models.Model):
     def __str__(self):
         return f'{self.author}|{self.date_created}|{self.text[:20]}'
 
+
+# class Ingredient(models.Model):
+#     class Meta:
+#         verbose_name = 'Ингредиент'
+#         verbose_name_plural = 'Ингредиенты'
+#
+#     name = models.CharField(max_length=255, verbose_name='Название')
+#
+#     def __str__(self):
+#         return self.name
 
 # # Комбинации
 # class Combination(models.Model):

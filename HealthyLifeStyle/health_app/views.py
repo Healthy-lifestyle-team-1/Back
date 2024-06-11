@@ -91,23 +91,6 @@ class ArticleViewSet(generics.ListCreateAPIView):
         return super().get_permissions()
 
 
-class IngredientViewSet(generics.ListCreateAPIView):
-    queryset = Ingredient.objects.all()
-    serializer_class = IngredientSerializer
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['name']
-    search_fields = ['name']
-    ordering_fields = ['name']
-    ordering = ['name']
-
-    def get_permissions(self):
-        if self.request.method == 'GET':
-            self.permission_classes = [permissions.AllowAny]
-        else:
-            self.permission_classes = [permissions.IsAdminUser]
-        return super().get_permissions()
-
-
 class CategoryUpdateView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
@@ -130,6 +113,23 @@ class ArticleUpdateView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
     permission_classes = [permissions.IsAdminUser]
+
+
+# class IngredientViewSet(generics.ListCreateAPIView):
+#     queryset = Ingredient.objects.all()
+#     serializer_class = IngredientSerializer
+#     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+#     filterset_fields = ['name']
+#     search_fields = ['name']
+#     ordering_fields = ['name']
+#     ordering = ['name']
+#
+#     def get_permissions(self):
+#         if self.request.method == 'GET':
+#             self.permission_classes = [permissions.AllowAny]
+#         else:
+#             self.permission_classes = [permissions.IsAdminUser]
+#         return super().get_permissions()
 
 
 # class CombinationViewSet(generics.ListCreateAPIView):

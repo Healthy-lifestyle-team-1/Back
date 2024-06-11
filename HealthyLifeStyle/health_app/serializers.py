@@ -12,8 +12,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['name', 'category', 'image', 'calories',
-                  'proteins', 'fats', 'carbs', 'price', 'rating']
+        fields = '__all__'
 
 
 class RatingSerializer(serializers.ModelSerializer):
@@ -34,11 +33,10 @@ class ArticleSerializer(serializers.ModelSerializer):
         fields = ['author', 'date_created', 'text']
 
 
-class IngredientSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Ingredient
-        fields = ['name']
-
+# class IngredientSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Ingredient
+#         fields = ['name']
 
 # class CombinationSerializer(serializers.ModelSerializer):
 #     class Meta:
