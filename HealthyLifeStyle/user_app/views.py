@@ -1,12 +1,21 @@
 from django.contrib.auth import login as auth_login, logout
 from django.utils import timezone
-from rest_framework.authentication import SessionAuthentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import permissions, status
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from .models import User
 from .serializers import UserLoginSerializer, VerifyCodeSerializer, UserSerializer
 from .utils import send_verification_code_email, send_verification_code_sms
+
+
+def get_tokens_for_user(user):
+    refresh = RefreshToken.for_user(user)
+    return {
+        'refresh': str(refresh),
+        'access': str(refresh.access_token),
+    }
 
 
 class UserLoginViewSet(APIView):
@@ -22,10 +31,10 @@ class UserLoginViewSet(APIView):
                 code = user.generate_verification_code()
                 send_verification_code_email(login, code)
             else:
-                user, _ = User.objects.get_or_create(email=login, defaults={'username': username})
+                user, _ = User.objects.get_or_create(phone=login, defaults={'username': username})
                 code = user.generate_verification_code()
                 send_verification_code_sms(login, code)
-            
+
             return Response({'detail': 'Verification code sent'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -44,7 +53,8 @@ class VerifyCodeViewSet(APIView):
                 user.code_expiry = None
                 user.save()
                 auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-                return Response({'detail': 'Login successful'}, status=status.HTTP_200_OK)
+                tokens = get_tokens_for_user(user)
+                return Response({'detail': 'Login successful', 'tokens': tokens}, status=status.HTTP_200_OK)
             
             return Response({'detail': 'Invalid or expired code'}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -52,7 +62,6 @@ class VerifyCodeViewSet(APIView):
 
 class UserLogoutViewSet(APIView):
     permission_classes = (permissions.AllowAny,)
-    authentication_classes = ()
 
     def post(self, request):
         logout(request)
@@ -61,7 +70,7 @@ class UserLogoutViewSet(APIView):
 
 class UserViewSet(APIView):
     permission_classes = (permissions.IsAuthenticated,)
-    authentication_classes = (SessionAuthentication,)
+    authentication_classes = (JWTAuthentication,)
 
     def get(self, request):
         serializer = UserSerializer(request.user)
@@ -70,6 +79,7 @@ class UserViewSet(APIView):
 
 class UserUpdateViewSet(APIView):
     permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
 
     def post(self, request):
         user = request.user
