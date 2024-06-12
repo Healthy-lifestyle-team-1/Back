@@ -2,6 +2,7 @@ import django_filters
 from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, filters, generics, permissions
+from .filters import ProductFilter
 from .serializers import *
 from .models import *
 
@@ -28,16 +29,17 @@ class ProductViewSet(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['name', 'category', 'calories',
-                        'proteins', 'fats', 'carbs',
-                        'price', 'contraindications', 'rating']
-    search_fields = ['name', 'category', 'calories',
-                        'proteins', 'fats', 'carbs',
-                        'price', 'contraindications', 'rating']
-    ordering_fields = ['name', 'category', 'calories',
-                        'proteins', 'fats', 'carbs',
-                        'price', 'contraindications', 'rating']
-    ordering = '-rating'
+    filterset_class = ProductFilter
+    # filterset_fields = ['name', 'category', 'category', 'calories',
+    #                     'proteins', 'fats', 'carbs',
+    #                     'price', 'contraindications', 'rating']
+    # search_fields = ['name', 'category', 'calories',
+    #                     'proteins', 'fats', 'carbs',
+    #                     'price', 'contraindications', 'rating']
+    # ordering_fields = ['name', 'category', 'calories',
+    #                     'proteins', 'fats', 'carbs',
+    #                     'price', 'contraindications', 'rating']
+    # ordering = '-rating'
 
     def get_permissions(self):
         if self.request.method == 'GET':
