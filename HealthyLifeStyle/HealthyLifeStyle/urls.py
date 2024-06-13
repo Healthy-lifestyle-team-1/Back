@@ -57,6 +57,8 @@ urlpatterns = [
     path('rating/', views.RatingViewSet.as_view()),
     path('allergy/', views.AllergyViewSet.as_view()),
     path('article/', views.ArticleViewSet.as_view()),
+    path('cart/', views.CartViewSet.as_view()),
+    path('cart_item/', views.CartItemViewSet.as_view()),
     # path('product/', views.IngredientViewSet.as_view()),
     # path('combination/', views.CombinationViewSet.as_view()),
 

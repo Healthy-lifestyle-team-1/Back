@@ -33,6 +33,29 @@ class ArticleSerializer(serializers.ModelSerializer):
         fields = ['author', 'date_created', 'text']
 
 
+class CartItemSerializer(serializers.ModelSerializer):
+    total_price = serializers.SerializerMethodField()
+
+    class Meta:
+        model = CartItem
+        fields = ['cart', 'product', 'quantity', 'total_price']
+
+    def get_total_price(self, obj):
+        return obj.get_total_price()
+
+
+class CartSerializer(serializers.ModelSerializer):
+    items = CartItemSerializer(many=True, source='cartitem_set')
+    total_price = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Cart
+        fields = ['user', 'items', 'created_at', 'total_price']
+
+    def get_total_price(self, obj):
+        total = sum(item.get_total_price() for item in obj.cartitem_set.all())
+        return total
+
 # class IngredientSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = Ingredient

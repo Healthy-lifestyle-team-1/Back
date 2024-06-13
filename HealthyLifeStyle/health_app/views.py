@@ -117,6 +117,21 @@ class ArticleUpdateView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAdminUser]
 
 
+class CartViewSet(generics.ListAPIView):
+    queryset = Cart.objects.all()
+    serializer_class = CartSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Cart.objects.filter(user=self.request.user)
+
+
+class CartItemViewSet(generics.ListAPIView):
+    queryset = CartItem.objects.all()
+    serializer_class = CartItemSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
 # class IngredientViewSet(generics.ListCreateAPIView):
 #     queryset = Ingredient.objects.all()
 #     serializer_class = IngredientSerializer

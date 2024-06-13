@@ -4,7 +4,7 @@ from django_ckeditor_5.widgets import CKEditor5Widget
 from .models import Article
 
 
-class CommentForm(forms.ModelForm):
+class ArticleForm(forms.ModelForm):
 
       def __init__(self, *args, **kwargs):
           super().__init__(*args, **kwargs)
@@ -15,6 +15,6 @@ class CommentForm(forms.ModelForm):
           fields = ("author", "text")
           widgets = {
               "text": CKEditor5Widget(
-                  attrs={"class": "django_ckeditor_5"}, config_name="article"
+                  attrs={"class": "django_ckeditor_5"}
               )
           }
