@@ -59,6 +59,7 @@ class Product(models.Model):
     weight = models.IntegerField(default=0, null=True)
     # rating = models.DecimalField(max_digits=3, decimal_places=2, null=True) # 4.11
     ingredients = models.TextField(blank=True, verbose_name='Продукты')
+    likes = models.ManyToManyField(User, related_name='likes', verbose_name='Лайки', null=True, blank=True)
     is_prepared = models.BooleanField(verbose_name='Готово')
 
     def average_rating(self):
@@ -72,7 +73,7 @@ class Product(models.Model):
 
 
 class Rating(models.Model):
-    product = models.ForeignKey(Product, related_name='rating', on_delete=models.CASCADE, verbose_name='Половинка')
+    product = models.ForeignKey(Product, related_name='rating', on_delete=models.CASCADE, verbose_name='Продукт')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
     value = models.IntegerField(verbose_name='Оценка')
 
