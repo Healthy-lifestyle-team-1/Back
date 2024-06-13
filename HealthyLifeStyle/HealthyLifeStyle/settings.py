@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-y005y=7tkw3!1+d1c+w%4u@*%p(m#_aw%p(it7tip7yuym0!p8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1', 'grikoandrey.pythonanywhere.com', ]
 
 
 # Application definition
@@ -185,7 +185,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Настройки для отправки СМС
 SMSC_LOGIN = config('SMSC_LOGIN')
 SMSC_PASSWORD = config('SMSC_PASSWORD')
-SMSC_POST = True 
+SMSC_POST = True
 SMSC_HTTPS = False
 SMSC_CHARSET = 'utf-8'
 SMSC_DEBUG = True
@@ -210,6 +210,7 @@ if DEBUG:
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 customColorPalette = [
       {
