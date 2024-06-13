@@ -10,7 +10,19 @@ class Category(models.Model):
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
-    name = models.CharField(max_length=255, verbose_name='Категория')
+    name = models.CharField(max_length=255, verbose_name='Название')
+
+    def __str__(self):
+        return self.name
+
+
+class Tag(models.Model):
+
+    class Meta:
+        verbose_name = 'Тэг'
+        verbose_name_plural = 'Тэги'
+
+    name = models.CharField(max_length=255, verbose_name='Название')
 
     def __str__(self):
         return self.name
@@ -47,6 +59,7 @@ class Product(models.Model):
     name = models.CharField(max_length=255, unique=True, verbose_name='Название')
     # category = models.ManyToManyField(Category, related_name='dish_halves', blank=True, verbose_name='Категория')
     category = models.ManyToManyField(Category, blank=True, verbose_name='Категория')
+    tag = models.ManyToManyField(Tag, blank=True, verbose_name='Тэг')
     image = models.ImageField(upload_to='images/', verbose_name='Фотография')  # Можно поставить default
     calories = models.FloatField(max_length=10, verbose_name='Калории')
     proteins = models.FloatField(max_length=10, verbose_name='Протеины')
@@ -59,7 +72,7 @@ class Product(models.Model):
     weight = models.IntegerField(default=0, null=True)
     # rating = models.DecimalField(max_digits=3, decimal_places=2, null=True) # 4.11
     ingredients = models.TextField(blank=True, verbose_name='Продукты')
-    likes = models.ManyToManyField(User, related_name='likes', verbose_name='Лайки', null=True, blank=True)
+    likes = models.ManyToManyField(User, related_name='likes', verbose_name='Лайки', blank=True)
     is_prepared = models.BooleanField(verbose_name='Готово')
 
     def average_rating(self):
