@@ -2,7 +2,10 @@ import django_filters
 from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, filters, generics, permissions
+from rest_framework import status
+from rest_framework.response import Response
 from .filters import ProductFilter
+from .permissions import IsCartOwner, IsCartItemOwner
 from .serializers import *
 from .models import *
 
@@ -30,16 +33,6 @@ class ProductViewSet(generics.ListCreateAPIView):
     serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_class = ProductFilter
-    # filterset_fields = ['name', 'category', 'category', 'calories',
-    #                     'proteins', 'fats', 'carbs',
-    #                     'price', 'contraindications', 'rating']
-    # search_fields = ['name', 'category', 'calories',
-    #                     'proteins', 'fats', 'carbs',
-    #                     'price', 'contraindications', 'rating']
-    # ordering_fields = ['name', 'category', 'calories',
-    #                     'proteins', 'fats', 'carbs',
-    #                     'price', 'contraindications', 'rating']
-    # ordering = '-rating'
 
     def get_permissions(self):
         if self.request.method == 'GET':
@@ -93,6 +86,40 @@ class ArticleViewSet(generics.ListCreateAPIView):
         return super().get_permissions()
 
 
+class CartViewSet(generics.ListCreateAPIView):
+    queryset = Cart.objects.all()
+    serializer_class = CartSerializer
+    permission_classes = [IsCartOwner]
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+    # Выдается только корзина самого пользователя
+    def get_queryset(self):
+        return Cart.objects.filter(user=self.request.user)
+
+
+class CartItemViewSet(generics.ListCreateAPIView):
+    queryset = CartItem.objects.all()
+    serializer_class = CartItemSerializer
+    permission_classes = [IsCartItemOwner]
+
+    def create(self, request, *args, **kwargs):
+        print(request)
+        cart = Cart.objects.get(user=request.user)
+        data = request.data.copy()
+        data.update({'cart': cart.id})
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    # Выдаются только позиции пользователя
+    def get_queryset(self):
+        return CartItem.objects.filter(cart__user=self.request.user)
+
+
 class CategoryUpdateView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
@@ -117,20 +144,16 @@ class ArticleUpdateView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAdminUser]
 
 
-class CartViewSet(generics.ListAPIView):
+class CartUpdateView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        return Cart.objects.filter(user=self.request.user)
+    permission_classes = [IsCartOwner]
 
 
-class CartItemViewSet(generics.ListAPIView):
+class CartItemUpdateView(generics.RetrieveUpdateDestroyAPIView):
     queryset = CartItem.objects.all()
     serializer_class = CartItemSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
+    permission_classes = [IsCartItemOwner]
 
 # class IngredientViewSet(generics.ListCreateAPIView):
 #     queryset = Ingredient.objects.all()

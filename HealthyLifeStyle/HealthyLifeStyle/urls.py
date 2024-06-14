@@ -66,6 +66,8 @@ urlpatterns = [
     path('product/<int:pk>/', views.ProductUpdateView.as_view()),
     path('allergy/<int:pk>/', views.AllergyUpdateView.as_view()),
     path('article/<int:pk>/', views.ArticleUpdateView.as_view()),
+    path('cart/<int:pk>/', views.CartUpdateView.as_view()),
+    path('cart_item/<int:pk>/', views.CartItemUpdateView.as_view()),
 
     # Документация
     path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),

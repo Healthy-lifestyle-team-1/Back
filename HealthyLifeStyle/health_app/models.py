@@ -1,9 +1,10 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 from user_app.models import User
 from django_ckeditor_5.fields import CKEditor5Field
 
 
-# Категории блюд
+# Категория
 class Category(models.Model):
 
     class Meta:
@@ -16,6 +17,7 @@ class Category(models.Model):
         return self.name
 
 
+# Тег
 class Tag(models.Model):
 
     class Meta:
@@ -49,7 +51,7 @@ class Allergy(models.Model):
         return self.name
 
 
-# Половинки тарелок
+# Продукт
 class Product(models.Model):
 
     class Meta:
@@ -75,6 +77,7 @@ class Product(models.Model):
     likes = models.ManyToManyField(User, related_name='likes', verbose_name='Лайки', blank=True)
     is_prepared = models.BooleanField(verbose_name='Готово')
 
+    # Высчитывание среднего рейтинга
     def average_rating(self):
         rating = self.rating.all()
         if rating:
@@ -85,6 +88,7 @@ class Product(models.Model):
         return self.name
 
 
+# Рейтинг
 class Rating(models.Model):
     product = models.ForeignKey(Product, related_name='rating', on_delete=models.CASCADE, verbose_name='Продукт')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
@@ -98,6 +102,7 @@ class Rating(models.Model):
         return f'{self.user.username}|{self.product}|{self.value}'
 
 
+# Статья
 class Article(models.Model):
 
     class Meta:
@@ -106,29 +111,52 @@ class Article(models.Model):
 
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
     date_created = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
-    # text = models.TextField(verbose_name='Текст')
     text = CKEditor5Field('Text', config_name='extends')
 
     def __str__(self):
         return f'{self.author}|{self.date_created}|{self.text[:20]}'
 
 
+# Менеджер для модели Корзины
+class CartManager(models.Manager):
+    # Переписывание метода создания для ограничения по количеству
+    def create(self, *args, **kwargs):
+        if self.model.objects.count() > 0:
+            raise ValidationError('Достигнут лимит на создание обьектов')
+        return super().create(*args, **kwargs)
+
+
+# Корзина
 class Cart(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Корзина'
+        verbose_name_plural = 'Корзины'
+
+    objects = CartManager()
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
 
     def __str__(self):
         return f'Cart of {self.user.username}'
 
 
+# Позиции корзины
 class CartItem(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
+
+    class Meta:
+        verbose_name = 'Предмет корзины'
+        verbose_name_plural = 'Предметы корзины'
+
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, verbose_name='Корзина')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Продукт')
+    quantity = models.PositiveIntegerField(default=1, verbose_name='Количество')
 
     def __str__(self):
         return f'{self.quantity} of {self.product.name}'
 
+    # Высчитывание всей суммы позиции
     def get_total_price(self):
         return self.product.price * self.quantity
 

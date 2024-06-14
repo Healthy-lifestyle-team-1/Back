@@ -37,6 +37,7 @@ class SMSC:
 
         if self.debug:
             print(f"SMSC send response: {result}")
+            print(message)
         
         return result
 
