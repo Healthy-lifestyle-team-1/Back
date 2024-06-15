@@ -91,14 +91,13 @@ class CartViewSet(generics.ListCreateAPIView):
     serializer_class = CartSerializer
     permission_classes = [IsCartOwner]
 
-    def create(self, request, *args, **kwargs):
-        data = request.data.copy()
-        data.update({'user': request.user.pk})
-        serializer = self.get_serializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    # Сохраняет пользователя
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update({
+            'user': self.request.user
+        })
+        return context
 
     # Выдается только корзина самого пользователя
     def get_queryset(self):
@@ -110,16 +109,14 @@ class CartItemViewSet(generics.ListCreateAPIView):
     serializer_class = CartItemSerializer
     permission_classes = [IsCartItemOwner]
 
-    def create(self, request, *args, **kwargs):
-        print(request)
-        cart = Cart.objects.get(user=request.user)
-        data = request.data.copy()
-        data.update({'cart': cart.id})
-        serializer = self.get_serializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    # Сохраняет корзину пользователя
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        cart = Cart.objects.get(user=self.request.user)
+        context.update({
+            'cart': cart,
+        })
+        return context
 
     # Выдаются только позиции пользователя
     def get_queryset(self):

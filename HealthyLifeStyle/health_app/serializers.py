@@ -40,24 +40,41 @@ class CartItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CartItem
-        fields = ['cart', 'product', 'quantity', 'total_price']
-        
+        fields = ['product', 'quantity', 'total_price']
+        read_only_fields = ['cart']
 
+    # Общая стоимость позиции корзины
     def get_total_price(self, obj):
         return obj.get_total_price()
+
+    # Добавление корзины в поле для создания позиции
+    def create(self, validated_data):
+        cart = self.context.get('cart')
+        if cart:
+            validated_data['cart'] = cart
+        return super().create(validated_data)
 
 
 class CartSerializer(serializers.ModelSerializer):
     items = CartItemSerializer(many=True, source='cartitem_set', read_only=True)
     total_price = serializers.SerializerMethodField()
+    user = UserSerializer(read_only=True)
 
     class Meta:
         model = Cart
         fields = ['user', 'items', 'created_at', 'total_price']
 
+    # Общая стоимость корзины
     def get_total_price(self, obj):
         total = sum(item.get_total_price() for item in obj.cartitem_set.all())
         return total
+
+    # Добавление пользователя в поле для создания корзины
+    def create(self, validated_data):
+        user = self.context.get('user')
+        if user:
+            validated_data['user'] = user
+        return super().create(validated_data)
 
 
 # class IngredientSerializer(serializers.ModelSerializer):
