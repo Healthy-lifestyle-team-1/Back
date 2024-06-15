@@ -91,8 +91,14 @@ class CartViewSet(generics.ListCreateAPIView):
     serializer_class = CartSerializer
     permission_classes = [IsCartOwner]
 
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+    def create(self, request, *args, **kwargs):
+        data = request.data.copy()
+        data.update({'user': request.user.pk})
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     # Выдается только корзина самого пользователя
     def get_queryset(self):

@@ -121,7 +121,7 @@ class Article(models.Model):
 class CartManager(models.Manager):
     # Переписывание метода создания для ограничения по количеству
     def create(self, *args, **kwargs):
-        if self.model.objects.count() > 0:
+        if self.model.objects.filter(user=kwargs['user']).count() > 0:
             raise ValidationError('Достигнут лимит на создание обьектов')
         return super().create(*args, **kwargs)
 

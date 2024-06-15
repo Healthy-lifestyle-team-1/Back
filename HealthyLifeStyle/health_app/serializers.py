@@ -1,4 +1,6 @@
 from rest_framework import serializers
+
+from user_app.serializers import UserSerializer
 from .models import *
 
 
