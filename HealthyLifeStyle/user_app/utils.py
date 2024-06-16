@@ -5,7 +5,7 @@ from .smsc_api import SMSC
 
 def send_verification_code_email(email, code):
     send_mail(
-        'Код верификации',
+        '«ЗОЖНИК»',
         f'Ваш код верификации на платформе «ЗОЖНИК»: {code}',
         settings.DEFAULT_FROM_EMAIL,
         [email],
