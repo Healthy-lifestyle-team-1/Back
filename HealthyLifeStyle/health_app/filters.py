@@ -10,7 +10,7 @@ class ProductFilter(django_filters.FilterSet):
     )
     tag = django_filters.ModelMultipleChoiceFilter(
         queryset=Tag.objects.all(),
-        conjoined=True  # чтобы выбрать продукты, относящиеся ко всем указанным категориям
+        conjoined=True  # чтобы выбрать продукты, относящиеся ко всем указанным тегам
     )
     calories = django_filters.NumberFilter()
     proteins = django_filters.NumberFilter()
