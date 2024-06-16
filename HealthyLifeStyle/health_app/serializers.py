@@ -17,6 +17,12 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ['name']
+
+
 class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating

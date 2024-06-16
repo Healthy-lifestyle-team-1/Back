@@ -53,6 +53,7 @@ urlpatterns = [
 
     # Подключеие моделей
     path('category/', views.CategoryViewSet.as_view()),
+    path('tag/', views.TagViewSet.as_view()),
     path('product/', views.ProductViewSet.as_view()),
     path('rating/', views.RatingViewSet.as_view()),
     path('allergy/', views.AllergyViewSet.as_view()),

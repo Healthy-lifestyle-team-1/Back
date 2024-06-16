@@ -28,6 +28,23 @@ class CategoryViewSet(generics.ListCreateAPIView):
         return super().get_permissions()
 
 
+class TagViewSet(generics.ListCreateAPIView):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['name']
+    search_fields = ['name']
+    ordering_fields = ['name']
+    ordering = 'name'
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            self.permission_classes = [permissions.AllowAny]
+        else:
+            self.permission_classes = [permissions.IsAdminUser]
+        return super().get_permissions()
+
+
 class ProductViewSet(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -89,7 +106,7 @@ class ArticleViewSet(generics.ListCreateAPIView):
 class CartViewSet(generics.ListCreateAPIView):
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
-    permission_classes = [IsCartOwner]
+    permission_classes = [IsCartOwner, permissions.IsAuthenticated]
 
     # Сохраняет пользователя
     def get_serializer_context(self):
@@ -107,7 +124,7 @@ class CartViewSet(generics.ListCreateAPIView):
 class CartItemViewSet(generics.ListCreateAPIView):
     queryset = CartItem.objects.all()
     serializer_class = CartItemSerializer
-    permission_classes = [IsCartItemOwner]
+    permission_classes = [IsCartItemOwner, permissions.IsAuthenticated]
 
     # Сохраняет корзину пользователя
     def get_serializer_context(self):

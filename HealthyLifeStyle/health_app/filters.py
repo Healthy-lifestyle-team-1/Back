@@ -1,11 +1,15 @@
 import django_filters
-from .models import Product, Allergy, Category
+from .models import Product, Allergy, Category, Tag
 
 
 class ProductFilter(django_filters.FilterSet):
     name = django_filters.CharFilter(lookup_expr='icontains')
     category = django_filters.ModelMultipleChoiceFilter(
         queryset=Category.objects.all(),
+        conjoined=True  # чтобы выбрать продукты, относящиеся ко всем указанным категориям
+    )
+    tag = django_filters.ModelMultipleChoiceFilter(
+        queryset=Tag.objects.all(),
         conjoined=True  # чтобы выбрать продукты, относящиеся ко всем указанным категориям
     )
     calories = django_filters.NumberFilter()
@@ -24,6 +28,12 @@ class ProductFilter(django_filters.FilterSet):
     not_category = django_filters.ModelMultipleChoiceFilter(
         field_name='category',
         queryset=Category.objects.all(),
+        conjoined=True,
+        exclude=True
+    )
+    not_tag = django_filters.ModelMultipleChoiceFilter(
+        field_name='tag',
+        queryset=Tag.objects.all(),
         conjoined=True,
         exclude=True
     )
