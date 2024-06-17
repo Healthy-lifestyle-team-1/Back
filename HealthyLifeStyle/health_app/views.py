@@ -75,7 +75,6 @@ class RatingViewSet(generics.ListCreateAPIView):
         })
         return context
 
-
     def get_queryset(self):
         return Rating.objects.filter(user=self.request.user)
 

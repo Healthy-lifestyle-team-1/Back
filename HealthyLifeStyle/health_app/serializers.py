@@ -8,7 +8,7 @@ from .models import *
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['name']
+        fields = ['id', 'name']
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -29,13 +29,13 @@ class ProductSerializer(serializers.ModelSerializer):
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
-        fields = ['name']
+        fields = ['id', 'name']
 
 
 class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
-        fields = ['product', 'value']
+        fields = ['id', 'product', 'value']
         read_only_fields = ['user']
 
     def create(self, validated_data):
@@ -48,7 +48,7 @@ class RatingSerializer(serializers.ModelSerializer):
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
-        fields = ['product']
+        fields = ['id', 'product']
         read_only_fields = ['user']
 
     def create(self, validated_data):
@@ -68,7 +68,7 @@ class LikeSerializer(serializers.ModelSerializer):
 class ArticleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article
-        fields = ['author', 'date_created', 'text']
+        fields = ['id', 'author', 'date_created', 'text']
 
 
 class CartItemSerializer(serializers.ModelSerializer):
@@ -98,7 +98,7 @@ class CartSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cart
-        fields = ['user', 'items', 'created_at', 'total_price']
+        fields = ['id', 'user', 'items', 'created_at', 'total_price']
 
     # Общая стоимость корзины
     def get_total_price(self, obj):
