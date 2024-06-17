@@ -47,7 +47,7 @@ class Product(models.Model):
     subtitle = models.CharField(max_length=255, default='', verbose_name='Развернутое название')
     category = models.ManyToManyField(Category, blank=True, verbose_name='Категория')
     tag = models.ManyToManyField(Tag, blank=True, verbose_name='Тэг')
-    image = models.ImageField(upload_to='images/', verbose_name='Фотография')  # Можно поставить default
+    image = models.ImageField(upload_to='images/', verbose_name='Фотография', null=True, blank=True)  # Можно поставить default
     calories = models.FloatField(max_length=10, verbose_name='Калории')
     proteins = models.FloatField(max_length=10, verbose_name='Протеины')
     fats = models.FloatField(max_length=10, verbose_name='Жиры')

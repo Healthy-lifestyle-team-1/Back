@@ -68,6 +68,17 @@ class RatingViewSet(generics.ListCreateAPIView):
     search_fields = ['product', 'value']
     ordering_fields = ['product', 'value']
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update({
+            'user': self.request.user
+        })
+        return context
+
+
+    def get_queryset(self):
+        return Rating.objects.filter(user=self.request.user)
+
 
 class LikeViewSet(generics.ListCreateAPIView):
     queryset = Like.objects.all()
@@ -77,6 +88,16 @@ class LikeViewSet(generics.ListCreateAPIView):
     filterset_fields = ['product']
     search_fields = ['product']
     ordering_fields = ['product']
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update({
+            'user': self.request.user
+        })
+        return context
+
+    def get_queryset(self):
+        return Like.objects.filter(user=self.request.user)
 
 
 class ArticleViewSet(generics.ListCreateAPIView):
@@ -96,26 +117,16 @@ class ArticleViewSet(generics.ListCreateAPIView):
         return super().get_permissions()
 
 
-class CartViewSet(generics.ListCreateAPIView):
+class CartViewSet(generics.ListAPIView):
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
-    permission_classes = [IsCartOwner, permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
-    # Сохраняет пользователя
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context.update({
-            'user': self.request.user
-        })
-        return context
-
-    # Выдается только корзина самого пользователя
     def get_queryset(self):
         return Cart.objects.filter(user=self.request.user)
 
 
 class CartItemViewSet(generics.ListCreateAPIView):
-    queryset = CartItem.objects.all()
     serializer_class = CartItemSerializer
     permission_classes = [IsCartItemOwner, permissions.IsAuthenticated]
 
@@ -151,17 +162,20 @@ class ArticleUpdateView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAdminUser]
 
 
-class CartUpdateView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Cart.objects.all()
-    serializer_class = CartSerializer
-    permission_classes = [IsCartOwner]
-
-
 class CartItemUpdateView(generics.RetrieveUpdateDestroyAPIView):
     queryset = CartItem.objects.all()
     serializer_class = CartItemSerializer
     permission_classes = [IsCartItemOwner]
 
+
+# class CartUpdateView(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Cart.objects.all()
+#     serializer_class = CartSerializer
+#     permission_classes = [IsCartOwner]
+#
+#     def get_queryset(self):
+#         print(Cart.objects.filter(user=self.request.user))
+#         return Cart.objects.filter(user=self.request.user)
 
 # class AllergyUpdateView(generics.RetrieveUpdateDestroyAPIView):
 #     queryset = Allergy.objects.all()
