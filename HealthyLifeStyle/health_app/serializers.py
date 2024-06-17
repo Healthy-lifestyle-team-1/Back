@@ -35,13 +35,34 @@ class TagSerializer(serializers.ModelSerializer):
 class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
-        fields = ['product', 'user', 'value']
+        fields = ['product', 'value']
+        read_only_fields = ['user']
+
+    def create(self, validated_data):
+        user = self.context.get('user')
+        if user:
+            validated_data['user'] = user
+        return super().create(validated_data)
 
 
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
-        fields = ['product', 'user']
+        fields = ['product']
+        read_only_fields = ['user']
+
+    def create(self, validated_data):
+        user = self.context.get('user')
+        if user:
+            validated_data['user'] = user
+        return super().create(validated_data)
+
+    def validate(self, data):
+        user = self.context.get('user')
+        product = data['product']
+        if Like.objects.filter(user=user, product=product).exists():
+            raise serializers.ValidationError("Вы уже лайкнули этот продукт.")
+        return data
 
 
 class ArticleSerializer(serializers.ModelSerializer):
@@ -55,7 +76,7 @@ class CartItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CartItem
-        fields = ['product', 'quantity', 'total_price']
+        fields = ['id', 'product', 'quantity', 'total_price']
         read_only_fields = ['cart']
 
     # Общая стоимость позиции корзины
@@ -91,6 +112,11 @@ class CartSerializer(serializers.ModelSerializer):
             validated_data['user'] = user
         return super().create(validated_data)
 
+    def validate(self, data):
+        user = self.context.get('user')
+        if Cart.objects.filter(user=user).exists():
+            raise serializers.ValidationError("У вас уже есть корзина.")
+        return data
 
 # class AllergySerializer(serializers.ModelSerializer):
 #     class Meta:

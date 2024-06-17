@@ -56,19 +56,16 @@ urlpatterns = [
     path('tag/', views.TagViewSet.as_view()),
     path('product/', views.ProductViewSet.as_view()),
     path('rating/', views.RatingViewSet.as_view()),
+    path('likes/', views.LikeViewSet.as_view()),
     path('article/', views.ArticleViewSet.as_view()),
     path('cart/', views.CartViewSet.as_view()),
     path('cart_item/', views.CartItemViewSet.as_view()),
-    # path('allergy/', views.AllergyViewSet.as_view()),
-    # path('product/', views.IngredientViewSet.as_view()),
-    # path('combination/', views.CombinationViewSet.as_view()),
 
     path('category/<int:pk>/', views.CategoryUpdateView.as_view()),
     path('product/<int:pk>/', views.ProductUpdateView.as_view()),
     path('article/<int:pk>/', views.ArticleUpdateView.as_view()),
-    path('cart/<int:pk>/', views.CartUpdateView.as_view()),
+    # path('cart/<int:pk>/', views.CartUpdateView.as_view()),
     path('cart_item/<int:pk>/', views.CartItemUpdateView.as_view()),
-    # path('allergy/<int:pk>/', views.AllergyUpdateView.as_view()),
 
     # Документация
     path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
