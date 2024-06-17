@@ -21,29 +21,8 @@ class Category(models.Model):
 class Tag(models.Model):
 
     class Meta:
-        verbose_name = 'Тэг'
-        verbose_name_plural = 'Тэги'
-
-    name = models.CharField(max_length=255, verbose_name='Название')
-
-    def __str__(self):
-        return self.name
-
-
-# Аллергия
-class Allergy(models.Model):
-    # Коровье молоко
-    # Яйца
-    # Арахис
-    # Рыба
-    # Моллюски
-    # Древесные орехи, такие как кешью или грецкие орехи.
-    # Пшеница
-    # Соя
-
-    class Meta:
-        verbose_name = 'Аллергия'
-        verbose_name_plural = 'Аллергии'
+        verbose_name = 'Тег'
+        verbose_name_plural = 'Теги'
 
     name = models.CharField(max_length=255, verbose_name='Название')
 
@@ -58,8 +37,14 @@ class Product(models.Model):
         verbose_name = 'Продукт'
         verbose_name_plural = 'Продукты'
 
-    name = models.CharField(max_length=255, unique=True, verbose_name='Название')
-    # category = models.ManyToManyField(Category, related_name='dish_halves', blank=True, verbose_name='Категория')
+    TYPES_OF_PREPARING = [
+        ('PR', 'Готовое блюдо'),
+        ('H1', 'Первая половинка'),
+        ('H2', 'Вторая половинка'),
+    ]
+
+    title = models.CharField(max_length=255, unique=True, verbose_name='Название')
+    subtitle = models.CharField(max_length=255, default='', verbose_name='Развернутое название')
     category = models.ManyToManyField(Category, blank=True, verbose_name='Категория')
     tag = models.ManyToManyField(Tag, blank=True, verbose_name='Тэг')
     image = models.ImageField(upload_to='images/', verbose_name='Фотография')  # Можно поставить default
@@ -68,14 +53,11 @@ class Product(models.Model):
     fats = models.FloatField(max_length=10, verbose_name='Жиры')
     carbs = models.FloatField(max_length=10, verbose_name='Углеводы')
     price = models.DecimalField(max_digits=6, decimal_places=2, verbose_name='Цена')
-    contraindications = models.ManyToManyField(Allergy, blank=True, verbose_name='Противопоказания')
-    cooking_method = models.TextField(default="", null=True)
-    # description = models.TextField()
-    weight = models.IntegerField(default=0, null=True)
-    # rating = models.DecimalField(max_digits=3, decimal_places=2, null=True) # 4.11
+    description = models.TextField(default='', verbose_name='Описание')
+    cooking_method = models.TextField(default="", null=True, verbose_name='Метод приготовления')
+    weight = models.IntegerField(default=0, null=True, verbose_name='Вес')
     ingredients = models.TextField(blank=True, verbose_name='Продукты')
-    likes = models.ManyToManyField(User, related_name='likes', verbose_name='Лайки', blank=True)
-    is_prepared = models.BooleanField(verbose_name='Готово')
+    is_prepared = models.CharField(max_length=2, default='PR', choices=TYPES_OF_PREPARING)
 
     # Высчитывание среднего рейтинга
     def average_rating(self):
@@ -84,8 +66,12 @@ class Product(models.Model):
             return sum(rate.value for rate in rating) / len(rating)
         return 0
 
+    # Высчитывание лайков
+    def like_amount(self):
+        return self.likes.count()
+
     def __str__(self):
-        return self.name
+        return self.title
 
 
 # Рейтинг
@@ -100,6 +86,20 @@ class Rating(models.Model):
 
     def __str__(self):
         return f'{self.user.username}|{self.product}|{self.value}'
+
+
+# Лайк
+class Like(models.Model):
+    user = models.ForeignKey(User, related_name='likes', on_delete=models.CASCADE, verbose_name='Пользователь')
+    product = models.ForeignKey(Product, related_name='likes', on_delete=models.CASCADE, verbose_name='Продукт')
+
+    class Meta:
+        verbose_name = 'Лайк'
+        verbose_name_plural = 'Лайки'
+        unique_together = ('user', 'product')
+
+    def __str__(self):
+        return f'{self.user.username}|{self.product}'
 
 
 # Статья
@@ -193,7 +193,27 @@ class CartItem(models.Model):
 #             return f'{self.half1.name} - {self.half2.name}'
 #         else:
 #             return self.half1.name
+
+
+# Аллергия
+# class Allergy(models.Model):
+#     # Коровье молоко
+#     # Яйца
+#     # Арахис
+#     # Рыба
+#     # Моллюски
+#     # Древесные орехи, такие как кешью или грецкие орехи.
+#     # Пшеница
+#     # Соя
 #
+#     class Meta:
+#         verbose_name = 'Аллергия'
+#         verbose_name_plural = 'Аллергии'
+#
+#     name = models.CharField(max_length=255, verbose_name='Название')
+#
+#     def __str__(self):
+#         return self.name
 
 
 # =============== На доработке ===============

@@ -69,21 +69,14 @@ class RatingViewSet(generics.ListCreateAPIView):
     ordering_fields = ['product', 'value']
 
 
-class AllergyViewSet(generics.ListCreateAPIView):
-    queryset = Allergy.objects.all()
-    serializer_class = AllergySerializer
+class LikeViewSet(generics.ListCreateAPIView):
+    queryset = Like.objects.all()
+    serializer_class = LikeSerializer
+    permission_classes = [permissions.AllowAny]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['name']
-    search_fields = ['name']
-    ordering_fields = ['name']
-    ordering = 'name'
-
-    def get_permissions(self):
-        if self.request.method == 'GET':
-            self.permission_classes = [permissions.AllowAny]
-        else:
-            self.permission_classes = [permissions.IsAdminUser]
-        return super().get_permissions()
+    filterset_fields = ['product']
+    search_fields = ['product']
+    ordering_fields = ['product']
 
 
 class ArticleViewSet(generics.ListCreateAPIView):
@@ -152,12 +145,6 @@ class ProductUpdateView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAdminUser]
 
 
-class AllergyUpdateView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Allergy.objects.all()
-    serializer_class = AllergySerializer
-    permission_classes = [permissions.IsAdminUser]
-
-
 class ArticleUpdateView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
@@ -175,6 +162,12 @@ class CartItemUpdateView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CartItemSerializer
     permission_classes = [IsCartItemOwner]
 
+
+# class AllergyUpdateView(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Allergy.objects.all()
+#     serializer_class = AllergySerializer
+#     permission_classes = [permissions.IsAdminUser]
+
 # class IngredientViewSet(generics.ListCreateAPIView):
 #     queryset = Ingredient.objects.all()
 #     serializer_class = IngredientSerializer
@@ -191,7 +184,6 @@ class CartItemUpdateView(generics.RetrieveUpdateDestroyAPIView):
 #             self.permission_classes = [permissions.IsAdminUser]
 #         return super().get_permissions()
 
-
 # class CombinationViewSet(generics.ListCreateAPIView):
 #     queryset = Combination.objects.all()
 #     serializer_class = CombinationSerializer
@@ -199,6 +191,22 @@ class CartItemUpdateView(generics.RetrieveUpdateDestroyAPIView):
 #     filterset_fields = ['half1', 'half2']
 #     search_fields = ['half1', 'half2']
 #     ordering_fields = ['half1', 'half2']
+#
+#     def get_permissions(self):
+#         if self.request.method == 'GET':
+#             self.permission_classes = [permissions.AllowAny]
+#         else:
+#             self.permission_classes = [permissions.IsAdminUser]
+#         return super().get_permissions()
+
+# class AllergyViewSet(generics.ListCreateAPIView):
+#     queryset = Allergy.objects.all()
+#     serializer_class = AllergySerializer
+#     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+#     filterset_fields = ['name']
+#     search_fields = ['name']
+#     ordering_fields = ['name']
+#     ordering = 'name'
 #
 #     def get_permissions(self):
 #         if self.request.method == 'GET':

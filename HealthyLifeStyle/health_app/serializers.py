@@ -12,9 +12,18 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
+    rating = serializers.SerializerMethodField()
+    likes = serializers.SerializerMethodField()
+
     class Meta:
         model = Product
         fields = '__all__'
+
+    def get_rating(self, obj):
+        return obj.average_rating()
+
+    def get_likes(self, obj):
+        return obj.like_amount()
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -29,10 +38,10 @@ class RatingSerializer(serializers.ModelSerializer):
         fields = ['product', 'user', 'value']
 
 
-class AllergySerializer(serializers.ModelSerializer):
+class LikeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Allergy
-        fields = ['name']
+        model = Like
+        fields = ['product', 'user']
 
 
 class ArticleSerializer(serializers.ModelSerializer):
@@ -82,6 +91,11 @@ class CartSerializer(serializers.ModelSerializer):
             validated_data['user'] = user
         return super().create(validated_data)
 
+
+# class AllergySerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Allergy
+#         fields = ['name']
 
 # class IngredientSerializer(serializers.ModelSerializer):
 #     class Meta:
