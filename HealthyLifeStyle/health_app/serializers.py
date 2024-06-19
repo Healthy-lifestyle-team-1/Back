@@ -73,6 +73,7 @@ class ArticleSerializer(serializers.ModelSerializer):
 
 class CartItemSerializer(serializers.ModelSerializer):
     total_price = serializers.SerializerMethodField()
+    product = ProductSerializer()  # Включаем данные о продукте
 
     class Meta:
         model = CartItem
