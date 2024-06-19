@@ -156,7 +156,7 @@ class CartItem(models.Model):
     quantity = models.PositiveIntegerField(default=1, verbose_name='Количество')
 
     def __str__(self):
-        return f'{self.quantity} of {self.product.name}'
+        return f'{self.quantity} of {self.product.title}'
 
     # Высчитывание всей суммы позиции
     def get_total_price(self):
