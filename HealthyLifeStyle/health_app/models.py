@@ -48,6 +48,7 @@ class Product(models.Model):
     category = models.ManyToManyField(Category, blank=True, verbose_name='Категория')
     tag = models.ManyToManyField(Tag, blank=True, verbose_name='Тэг')
     image = models.ImageField(upload_to='images/', verbose_name='Фотография', null=True, blank=True)  # Можно поставить default
+    image_extra = models.ImageField(upload_to='images/', verbose_name='Фотография половинки', null=True, blank=True)
     calories = models.FloatField(max_length=10, verbose_name='Калории')
     proteins = models.FloatField(max_length=10, verbose_name='Протеины')
     fats = models.FloatField(max_length=10, verbose_name='Жиры')
