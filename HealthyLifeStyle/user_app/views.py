@@ -117,6 +117,7 @@ class UserViewSet(APIView):
     authentication_classes = (JWTAuthentication,)
 
     def get(self, request):
+        print(f"User: {request.user}")  # Отладочная информация
         serializer = UserSerializer(request.user)
         return Response({'user': serializer.data}, status=status.HTTP_200_OK)
 
