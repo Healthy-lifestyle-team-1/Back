@@ -80,7 +80,7 @@ class Rating(models.Model):
     product = models.ForeignKey(Product, related_name='rating', on_delete=models.CASCADE, verbose_name='Продукт')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
     value = models.IntegerField(verbose_name='Оценка')
-    text = models.TextField(verbose_name='Текст')
+    text = models.TextField(verbose_name='Текст', default='')
 
     class Meta:
         verbose_name = 'Рейтинг'

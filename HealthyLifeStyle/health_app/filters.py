@@ -42,7 +42,7 @@ class ProductFilter(django_filters.FilterSet):
 
     class Meta:
         model = Product
-        fields = ['name', 'category', 'calories', 'proteins',
+        fields = ['id', 'name', 'category', 'calories', 'proteins',
                   'fats', 'carbs', 'price', 'is_prepared',
                   'not_name', 'not_category', 'not_calories',
                   'not_proteins', 'not_fats', 'not_carbs', 'not_price',
