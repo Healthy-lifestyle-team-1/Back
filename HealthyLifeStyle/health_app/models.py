@@ -58,7 +58,7 @@ class Product(models.Model):
     cooking_method = models.TextField(default="", null=True, verbose_name='Метод приготовления')
     weight = models.IntegerField(default=0, null=True, verbose_name='Вес')
     ingredients = models.TextField(blank=True, verbose_name='Продукты')
-    is_prepared = models.CharField(max_length=2, default='PR', choices=TYPES_OF_PREPARING)
+    is_prepared = models.CharField(max_length=2, default='PR', choices=TYPES_OF_PREPARING, verbose_name='Тип продукта')
 
     # Высчитывание среднего рейтинга
     def average_rating(self):
