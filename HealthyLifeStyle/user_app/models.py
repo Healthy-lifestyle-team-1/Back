@@ -66,5 +66,6 @@ class User(AbstractUser, PermissionsMixin):
         return code
     
     def __str__(self):
-        return f'{self.username}|{self.phone}'
-    
+        if self.phone:
+            return f'{self.username}|{self.phone}'
+        return f'{self.username}|{self.email}'
