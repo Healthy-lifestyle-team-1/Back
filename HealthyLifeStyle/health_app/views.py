@@ -142,6 +142,21 @@ class CartItemViewSet(generics.ListCreateAPIView):
     # Выдаются только позиции пользователя
     def get_queryset(self):
         return CartItem.objects.filter(cart__user=self.request.user)
+    
+    def perform_create(self, serializer):
+        cart = Cart.objects.get(user=self.request.user)
+        product = serializer.validated_data['product']
+
+        # Проверка, существует ли уже такой товар в корзине
+        existing_item = CartItem.objects.filter(cart=cart, product=product).first()
+        
+        if existing_item:
+            # Увеличиваем количество существующего товара
+            existing_item.quantity += serializer.validated_data['quantity']
+            existing_item.save()
+        else:
+            # Создаем новый элемент корзины
+            serializer.save(cart=cart)
 
 
 class CategoryUpdateView(generics.RetrieveUpdateDestroyAPIView):

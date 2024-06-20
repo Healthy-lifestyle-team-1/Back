@@ -73,18 +73,25 @@ class ArticleSerializer(serializers.ModelSerializer):
 
 class CartItemSerializer(serializers.ModelSerializer):
     total_price = serializers.SerializerMethodField()
-    product = ProductSerializer()  # Включаем данные о продукте
+    product = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all())
+    product_title = serializers.SerializerMethodField()
+    product_image = serializers.SerializerMethodField()
 
     class Meta:
         model = CartItem
-        fields = ['id', 'product', 'quantity', 'total_price']
+        fields = ['id', 'product', 'quantity', 'total_price', 'product_title', 'product_image']
         read_only_fields = ['cart']
 
     # Общая стоимость позиции корзины
     def get_total_price(self, obj):
         return obj.get_total_price()
 
-    # Добавление корзины в поле для создания позиции
+    def get_product_title(self, obj):
+        return obj.product.title
+
+    def get_product_image(self, obj):
+        return obj.product.image.url if obj.product.image else None
+
     def create(self, validated_data):
         cart = self.context.get('cart')
         if cart:
