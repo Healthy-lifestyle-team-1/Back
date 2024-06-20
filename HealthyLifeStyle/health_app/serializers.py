@@ -71,6 +71,12 @@ class ArticleSerializer(serializers.ModelSerializer):
         fields = ['id', 'author', 'date_created', 'text']
 
 
+class NewsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = News
+        fields = ['id', 'author', 'date_created', 'text']
+
+
 class CartItemSerializer(serializers.ModelSerializer):
     total_price = serializers.SerializerMethodField()
     product = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all())

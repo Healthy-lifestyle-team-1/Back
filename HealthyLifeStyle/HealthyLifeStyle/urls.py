@@ -58,12 +58,14 @@ urlpatterns = [
     path('rating/', views.RatingViewSet.as_view()),
     path('likes/', views.LikeViewSet.as_view()),
     path('article/', views.ArticleViewSet.as_view()),
+    path('news/', views.NewsViewSet.as_view()),
     path('cart/', views.CartViewSet.as_view()),
     path('cart_item/', views.CartItemViewSet.as_view()),
 
     path('category/<int:pk>/', views.CategoryUpdateView.as_view()),
     path('product/<int:pk>/', views.ProductUpdateView.as_view()),
     path('article/<int:pk>/', views.ArticleUpdateView.as_view()),
+    path('news/<int:pk>/', views.NewsUpdateView.as_view()),
     # path('cart/<int:pk>/', views.CartUpdateView.as_view()),
     path('cart_item/<int:pk>/', views.CartItemUpdateView.as_view()),
 

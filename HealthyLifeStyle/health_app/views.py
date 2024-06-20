@@ -116,6 +116,23 @@ class ArticleViewSet(generics.ListCreateAPIView):
         return super().get_permissions()
 
 
+class NewsViewSet(generics.ListCreateAPIView):
+    queryset = News.objects.all()
+    serializer_class = NewsSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['author', 'date_created']
+    search_fields = ['author', 'date_created']
+    ordering_fields = ['author', 'date_created']
+    ordering = '-date_created'
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            self.permission_classes = [permissions.AllowAny]
+        else:
+            self.permission_classes = [permissions.IsAdminUser]
+        return super().get_permissions()
+
+
 class CartViewSet(generics.ListAPIView):
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
@@ -176,6 +193,11 @@ class ArticleUpdateView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ArticleSerializer
     permission_classes = [permissions.IsAdminUser]
 
+
+class NewsUpdateView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = News.objects.all()
+    serializer_class = NewsSerializer
+    permission_classes = [permissions.IsAdminUser]
 
 class CartItemUpdateView(generics.RetrieveUpdateDestroyAPIView):
     queryset = CartItem.objects.all()
