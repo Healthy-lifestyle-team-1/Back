@@ -3,6 +3,7 @@ from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import permissions, status
+from rest_framework.authentication import SessionAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .models import User
@@ -40,7 +41,7 @@ def get_tokens_for_user(user):
 
 
 class UserLoginViewSet(APIView):
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = [permissions.AllowAny]
 
     def post(self, request):
         serializer = UserLoginSerializer(data=request.data)
@@ -84,7 +85,7 @@ class UserLoginViewSet(APIView):
 
 
 class VerifyCodeViewSet(APIView):
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = [permissions.AllowAny]
 
     def post(self, request):
         serializer = VerifyCodeSerializer(data=request.data)
@@ -105,7 +106,7 @@ class VerifyCodeViewSet(APIView):
 
 
 class UserLogoutViewSet(APIView):
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = [permissions.AllowAny]
 
     def post(self, request):
         logout(request)
@@ -113,18 +114,18 @@ class UserLogoutViewSet(APIView):
 
 
 class UserViewSet(APIView):
-    permission_classes = (permissions.IsAuthenticated,)
-    authentication_classes = (JWTAuthentication,)
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [SessionAuthentication, JWTAuthentication]
 
     def get(self, request):
-        print(f"User: {request.user}")  # Отладочная информация
+        # print(f"User: {request.user}")  # Отладочная информация
         serializer = UserSerializer(request.user)
         return Response({'user': serializer.data}, status=status.HTTP_200_OK)
 
 
 class UserUpdateViewSet(APIView):
     permission_classes = [permissions.IsAuthenticated]
-    authentication_classes = [JWTAuthentication]
+    authentication_classes = [SessionAuthentication, JWTAuthentication]
 
     def post(self, request):
         user = request.user

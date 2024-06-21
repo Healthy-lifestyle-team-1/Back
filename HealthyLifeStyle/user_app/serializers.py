@@ -22,7 +22,7 @@ class VerifyCodeSerializer(serializers.Serializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['email', 'phone', 'username']
+        fields = ['id', 'email', 'phone', 'username']
         
     def validate_phone(self, value):
         if len(value) != 11:

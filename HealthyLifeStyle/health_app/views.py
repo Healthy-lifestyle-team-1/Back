@@ -139,7 +139,7 @@ class CartViewSet(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        print(f"Cart of {self.request.user}")  # Отладочная информация
+        # print(f"Cart of {self.request.user}")  # Отладочная информация
         return Cart.objects.filter(user=self.request.user)
 
 
