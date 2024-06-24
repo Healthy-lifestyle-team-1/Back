@@ -1,15 +1,30 @@
 from django.contrib import admin
 from .models import *
 
-class ProductAdmin(admin.ModelAdmin):
-    # список или кортеж со всеми полями, отображаемыми в таблице с постами
-    list_display = ('__str__', 'price')
-    list_filter = ('category', 'tag', 'price')  # фильтры по полям
 
-# Register your models here.
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'price')
+    search_fields = ('title',)
+    list_filter = ('category', 'tag', 'price')
+
+
+class ArticleAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'author', 'date_created')
+    search_fields = ('author',)
+    list_filter = ('date_created',)
+
+
+class NewsAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'author', 'date_created')
+    search_fields = ('author',)
+    list_filter = ('date_created',)
+
+
+# Регистрируем модели в админке
 admin.site.register(Category)
 admin.site.register(Product, ProductAdmin)
-admin.site.register(Article)
+admin.site.register(Article, ArticleAdmin)
+admin.site.register(News, NewsAdmin)
 admin.site.register(Rating)
 admin.site.register(Cart)
 admin.site.register(Tag)

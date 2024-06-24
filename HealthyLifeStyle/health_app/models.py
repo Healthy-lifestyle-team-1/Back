@@ -117,21 +117,22 @@ class Article(models.Model):
     text = CKEditor5Field('Text', config_name='extends')
 
     def __str__(self):
-        return f'{self.author}|{self.date_created}|{self.text[:20]}'
+        return f'{self.author}|{self.text[:20]}'
 
 
+# Новости
 class News(models.Model):
 
     class Meta:
         verbose_name = 'Новость'
-        verbose_name_plural = 'Новость'
+        verbose_name_plural = 'Новости'
 
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
     date_created = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     text = CKEditor5Field('Text', config_name='extends')
 
     def __str__(self):
-        return f'{self.author}|{self.date_created}|{self.text[:20]}'
+        return f'{self.author}|{self.text[:20]}'
 
 
 # Менеджер для модели Корзины
