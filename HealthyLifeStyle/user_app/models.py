@@ -35,7 +35,7 @@ class User(AbstractUser, PermissionsMixin):
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
-
+    
     # GENDER_CHOICES = [
     #     ('M', 'Male'),
     #     ('F', 'Female'),
@@ -45,18 +45,18 @@ class User(AbstractUser, PermissionsMixin):
     
     username = models.CharField(max_length=10, null=True, verbose_name='Имя')
     phone = models.CharField(max_length=15, null=True, unique=True, verbose_name='Телефон')
-    email = models.EmailField(max_length=50, null=True, blank=True)
+    email = models.EmailField(max_length=50, null=True, blank=True, unique=True)
     password = models.CharField(max_length=20, null=True, blank=True, verbose_name='Пароль')
     # gender = models.CharField(max_length=1, null=True, choices=GENDER_CHOICES, verbose_name='Пол')
     # weight = models.FloatField(max_length=3, null=True, verbose_name='Вес')
     # height = models.FloatField(max_length=3, null=True, verbose_name='Рост')
     # age = models.IntegerField(max_length=3, null=True, verbose_name='Возраст')
     date_joined = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания аккаунта')
-    verification_code = models.CharField(max_length=6, blank=True, null=True)
-    code_expiry = models.DateTimeField(blank=True, null=True)
+    verification_code = models.CharField(max_length=6, blank=True, null=True, verbose_name='Код верификации')
+    code_expiry = models.DateTimeField(blank=True, null=True, verbose_name='Срок действия кода')
     
     USERNAME_FIELD = 'phone'
-    REQUIRED_FIELDS = ['email']
+    REQUIRED_FIELDS = ['username', 'email']
     
     def generate_verification_code(self):
         code = str(uuid.uuid4().int)[:6]

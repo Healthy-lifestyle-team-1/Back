@@ -231,28 +231,3 @@ class CartItem(models.Model):
 #
 #     def __str__(self):
 #         return self.name
-
-
-# =============== На доработке ===============
-# class Cart(models.Model):
-#     user = models.ForeignKey(Customer, related_name='carts', on_delete=models.CASCADE)
-#     created_at = models.DateTimeField(auto_now_add=True)
-
-
-# class CartItem(models.Model):
-#     cart = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE)
-#     dish_half = models.ForeignKey(DishHalf, related_name='+', on_delete=models.CASCADE)
-#     quantity = models.PositiveIntegerField(default=1)
-
-
-# class Order(models.Model):
-#     user = models.ForeignKey(Customer, related_name='orders', on_delete=models.CASCADE)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     total_price = models.DecimalField(max_digits=10, decimal_places=2)
-
-
-# class OrderItem(models.Model):
-#     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
-#     dish_half = models.ForeignKey(DishHalf, related_name='+', on_delete=models.CASCADE)
-#     quantity = models.PositiveIntegerField(default=1)
-#     price = models.DecimalField(max_digits=6, decimal_places=2)

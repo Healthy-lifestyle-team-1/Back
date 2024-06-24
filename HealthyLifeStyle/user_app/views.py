@@ -19,27 +19,6 @@ def get_tokens_for_user(user):
     }
 
 
-# class UserLoginViewSet(APIView):
-#     permission_classes = (permissions.AllowAny,)
-
-#     def post(self, request):
-#         serializer = UserLoginSerializer(data=request.data)
-#         if serializer.is_valid():
-#             login = serializer.validated_data.get('login')
-#             username = serializer.validated_data.get('username', None)
-#             if '@' in login:
-#                 user, _ = User.objects.get_or_create(email=login, defaults={'username': username})
-#                 code = user.generate_verification_code()
-#                 send_verification_code_email(login, code)
-#             else:
-#                 user, _ = User.objects.get_or_create(phone=login, defaults={'username': username})
-#                 code = user.generate_verification_code()
-#                 send_verification_code_sms(login, code)
-
-#             return Response({'detail': 'Verification code sent'}, status=status.HTTP_200_OK)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 class UserLoginViewSet(APIView):
     permission_classes = [permissions.AllowAny]
 
@@ -136,3 +115,24 @@ class UserUpdateViewSet(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# class UserLoginViewSet(APIView):
+#     permission_classes = (permissions.AllowAny,)
+
+#     def post(self, request):
+#         serializer = UserLoginSerializer(data=request.data)
+#         if serializer.is_valid():
+#             login = serializer.validated_data.get('login')
+#             username = serializer.validated_data.get('username', None)
+#             if '@' in login:
+#                 user, _ = User.objects.get_or_create(email=login, defaults={'username': username})
+#                 code = user.generate_verification_code()
+#                 send_verification_code_email(login, code)
+#             else:
+#                 user, _ = User.objects.get_or_create(phone=login, defaults={'username': username})
+#                 code = user.generate_verification_code()
+#                 send_verification_code_sms(login, code)
+
+#             return Response({'detail': 'Verification code sent'}, status=status.HTTP_200_OK)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

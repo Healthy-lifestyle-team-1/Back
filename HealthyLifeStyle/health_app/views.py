@@ -1,9 +1,6 @@
-import django_filters
 from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, filters, generics, permissions
-from rest_framework import status
-from rest_framework.response import Response
+from rest_framework import filters, generics, permissions
 from .filters import ProductFilter
 from .permissions import IsCartOwner, IsCartItemOwner
 from .serializers import *
