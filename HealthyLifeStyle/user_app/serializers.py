@@ -25,15 +25,17 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'email', 'phone', 'username']
         
     def validate_phone(self, value):
+        user = self.instance
         if len(value) != 11:
             raise serializers.ValidationError("Phone number must be exactly 11 digits.")
         if not value.isdigit():
             raise serializers.ValidationError("Phone number must contain only digits.")
-        if User.objects.filter(phone=value).exists():
+        if User.objects.filter(phone=value).exclude(id=user.id).exists():
             raise serializers.ValidationError("This phone number is already in use.")
         return value
 
     def validate_email(self, value):
-        if User.objects.filter(email=value).exists():
+        user = self.instance
+        if User.objects.filter(email=value).exclude(id=user.id).exists():
             raise serializers.ValidationError("This email is already in use.")
         return value

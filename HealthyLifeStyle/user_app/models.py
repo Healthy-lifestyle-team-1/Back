@@ -43,7 +43,7 @@ class User(AbstractUser, PermissionsMixin):
     
     objects = UserManager()
     
-    username = models.CharField(max_length=10, null=True, verbose_name='Имя')
+    username = models.CharField(max_length=20, null=True, verbose_name='Имя')
     phone = models.CharField(max_length=15, null=True, unique=True, verbose_name='Телефон')
     email = models.EmailField(max_length=50, null=True, blank=True, unique=True)
     password = models.CharField(max_length=20, null=True, blank=True, verbose_name='Пароль')

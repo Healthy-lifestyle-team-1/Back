@@ -43,7 +43,7 @@ class UserLoginViewSet(APIView):
                     return Response({'detail': 'Verification code sent for new user'}, status=status.HTTP_200_OK)
                 else:
                     return Response({'detail': 'User already exists, please login'}, status=status.HTTP_400_BAD_REQUEST)
-            else:  # логирование существующего
+            else:  # аутентификация существующего
                 user = None
                 if '@' in login:
                     user = User.objects.filter(email=login).first()
@@ -101,19 +101,11 @@ class UserViewSet(APIView):
         serializer = UserSerializer(request.user)
         return Response({'user': serializer.data}, status=status.HTTP_200_OK)
 
-
-class UserUpdateViewSet(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-    authentication_classes = [SessionAuthentication, JWTAuthentication]
-
-    def post(self, request):
-        user = request.user
-        serializer = UserSerializer(user, data=request.data, partial=True)
-        
+    def put(self, request):
+        serializer = UserSerializer(request.user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        
+            return Response({'user': serializer.data}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
