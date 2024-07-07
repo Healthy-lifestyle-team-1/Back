@@ -196,6 +196,7 @@ class NewsUpdateView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = NewsSerializer
     permission_classes = [permissions.IsAdminUser]
 
+
 class CartItemUpdateView(generics.RetrieveUpdateDestroyAPIView):
     queryset = CartItem.objects.all()
     serializer_class = CartItemSerializer
